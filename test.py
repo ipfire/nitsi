@@ -150,113 +150,6 @@ class vm():
         return self.serial_con.command(cmd)
 
 
-
-
-
-# try:
-#     dom = conn.lookupByUUIDString(uuid)
-# except:
-#     flash(u"Failed to get the domain object", 'alert-danger')
-#     print('Failed to get the domain object', file=sys.stderr)
-#     conn.close()
-#     return redirect("/vm")
-
-# domname = dom.name()
-# if action == "start":
-#     try:
-#         dom.create()
-#     except:
-#         flash(u"Can not boot guest domain.", 'alert-danger')
-#         print('Can not boot guest domain.', file=sys.stderr)
-#         conn.close()
-#         return redirect("/vm")
-
-#     flash(u"Sucessfully started Domain \"{}\"".format(domname), 'alert-info')
-#     conn.close()
-#     return redirect("/vm")
-
-# elif action == "shutdown":
-#     try:
-#         dom.shutdown()
-#     except:
-#         flash(u"Can not shutdown guest domain.", 'alert-danger')
-#         print('Can not shutdown guest domain.', file=sys.stderr)
-#         conn.close()
-#         return redirect("/vm")
-
-#     flash(u"Sucessfully shutdowned Domain \"{}\"".format(domname), 'alert-info')
-#     conn.close()
-#     return redirect("/vm")
-
-# elif action == "destroy":
-#     try:
-#         dom.destroy()
-#     except:
-#         flash(u"Can not destroy guest domain.", 'alert-danger')
-#         print('Can not destroy guest domain.', file=sys.stderr)
-#         conn.close()
-#         return redirect("/vm")
-
-#     flash(u"Sucessfully destroyed Domain \"{}\"".format(domname), 'alert-info')
-#     conn.close()
-#     return redirect("/vm")
-
-# elif action == "pause":
-#     try:
-#         dom.suspend()
-#     except:
-#         flash(u"Can not pause guest domain.", 'alert-danger')
-#         print('Can not pause guest domain.', file=sys.stderr)
-#         conn.close()
-#         return redirect("/vm")
-
-#     flash(u"Sucessfully paused Domain \"{}\"".format(domname), 'alert-info')
-#     conn.close()
-#     return redirect("/vm")
-
-# elif action == "resume":
-#     try:
-#         dom.resume()
-#     except:
-#         flash(u"Can not eesume guest domain.:", 'alert-danger')
-#         print('Can not resume guest domain.', file=sys.stderr)
-#         conn.close()
-#         return redirect("/vm")
-
-#     flash(u"Sucessfully resumed Domain \"{}\"".format(domname), 'alert-info')
-#     conn.close()
-#     return redirect("/vm")
-
-# else:
-#     flash(u"No such action: \"{}\"".format(action), 'alert-warning')
-#     conn.close()
-#     return redirect("/vm")
-
-
-# @vms.route('/vm')
-# @login_required
-# def vm_overview():
-#     import sys
-#     import libvirt
-#     conn = libvirt.open('qemu:///system')
-#     doms = conn.listAllDomains(0)
-#     domains = []
-
-#     if len(doms) != 0:
-#         for dom in doms:
-#             domain = {}
-#             domain.setdefault("name", dom.name())
-#             domain.setdefault("uuid", dom.UUIDString())
-#             state, reason = dom.state()
-#             domain.setdefault("state", dom_state(state))
-#             domains.append(domain)
-
-#     conn.close()
-
-#     return render_template("virtberry_vm_basic-vm.html", domains=domains)
-
-
-
 class connection():
     def __init__(self, device, username=None):
         self.buffer = b""
@@ -264,125 +157,6 @@ class connection():
         self.username = username
         self.log = log(1)
         self.con = serial.Serial(device)
-        # # Just press enter one time to see what we get
-        # self.con.write(b'\n')
-        # # We get two new lines \r\n ?
-        # data = self.readline()
-        # self.log_console_line(data.decode())
-
-
-        # if not self.back_at_prompt():
-        #     self.log.debug("We need to login")
-        #     if not self.login(password):
-        #         self.log.error("Login failed")
-        #         return False
-        # else:
-        #     self.log.debug("We are logged in")
-
-
-        '''      in_waiting_before = 0
-        sleep(1)
-
-        while in_waiting_before != self.con.in_waiting:
-            in_waiting_before = self.con.in_waiting
-            sleep(0.5)
-
-        print(self.con.in_waiting)
-        data = self.con.read(self.con.in_waiting)
-        print(data)
-        print(data.decode(),end='')
-
-        string = 'root\n'
-        self.con.write(string.encode())
-        self.con.flush() '''
-
-        ''' in_waiting_before = 0
-        sleep(1)
-
-        while in_waiting_before != self.con.in_waiting:
-            in_waiting_before = self.con.in_waiting
-            sleep(0.5)
-
-        print(self.con.in_waiting)
-        data = self.con.read(self.con.in_waiting)
-        print(data)
-        print(data.decode(), end='')
-
-        string = '25814@root\n'
-        self.con.write(string.encode())
-        self.con.flush()
-
-        in_waiting_before = 0
-        sleep(1)
-
-        while in_waiting_before != self.con.in_waiting:
-            in_waiting_before = self.con.in_waiting
-            sleep(0.5)
-
-        print(self.con.in_waiting)
-        data = self.con.read(self.con.in_waiting)
-        print(data)
-        print(data.decode(), end='') '''
-
-        # check if we already logged in
-        # If we we get something like [root@localhost ~]#
-        #self.readline()
-
-       # if not self.check_logged_in(username):
-            #print("Try to login")
-            #if self.login(username, password):
-            #    print("Could not login")
-            #    return False
-
-        #pattern = "^\[" + username + "@.+\]#"
-        #print(pattern)
-        #data = self.readline(pattern=pattern)
-        #if data["return-code"] == 1:
-       #         print("We are logged in")
-       # else:
-         #      print("We are  not logged in")
-               # login
-
-        #while 1:
-            #data = self.readline("^.*login:")
-           # if data["return-code"] == 1:
-             #   break
-
-        # string = 'cd / && ls \n'
-        # self.con.write(string.encode())
-        # self.con.flush()
-        # #print(self.con.read(5))
-
-        # data = self.readline()
-        # self.log_console_line(data.decode())
-
-        # while not self.back_at_prompt():
-        #     data = self.readline()
-        #     self.log_console_line(data.decode())
-
-        ''' in_waiting_before = 0
-        sleep(1)
-
-        while in_waiting_before != self.con.in_waiting:
-            in_waiting_before = self.con.in_waiting
-            sleep(0.5)
-
-        print(self.con.in_waiting)
-        data = self.con.read(self.con.in_waiting)
-        data = data.decode()
-
-        pattern = "^\[" + username + "@.+\]# $"
-        pattern = re.compile(pattern, re.MULTILINE)
-        if pattern.match(data, re.MULTILINE):
-            print("It works")
-
-        print(data, end='') '''
-
-
-    #@property
-    #def con(self):
-    #    return self.con
-
 
     def read(self, size=1):
         if len(self.buffer) >= size:
@@ -577,89 +351,6 @@ class connection():
             self.log_console_line(data.decode())
 
 
-#    while True:
-
-#        line = self.readline()
-
-#        print (line)
-
-#        print("Hello")
-
-#        print("World")
-
-#        Hello
-#        World
-
-#        Hello World
-
-#        # Peek for prompt?
-#        if self.back_at_prompt():
-#            break
-
-# def back_at_prompt():
-#     data = self.peek()
-
-#     if not char == "[":
-#         return False
-
-#     data = self.peek(in_waiting)
-#     m = re.search(..., data)
-#     if m:
-#         return True
-
-
-
-
-
-# pattern = r"^\[root@.+\]#"
-
-# pattern = re.compile(pattern, re.MULTILINE)
-
-# data = """cd / && ls
-# bin   dev  home  lib64	     media  opt   root	sbin  sys  usr
-# boot  etc  lib	 lost+found  mnt    proc  run	srv   tmp  var
-# [root@localhost /]# """
-
-# #data = "[root@localhost /]# "
-# data2 = pattern.search(data)
-
-# #if pattern.search(data):
-#    # print("get here")
-
-# #print(data2.group())
-
-
-
-# vm = vm("qemu:///system")
-
-# dom = vm.domain_start_from_xml_file("/home/jonatan/python-testing-kvm/centos2.xml")
-
-# # This block till the vm is booted
-# print("Waiting till the domain is booted up")
-# vm.check_domain_is_booted_up(dom)
-# print("Domain is booted up")
-# #vm.domain_get_serial_device(dom)
-# #vm.domain_get_serial_device(dom)
-
-# #centos2 = vm("/home/jonatan/python-testing-kvm/centos2.xml", "/home/jonatan/python-testing-kvm/centos2-snapshot.xml")
-
-# centos2.define()
-# centos2.create_snapshot()
-# centos2.start()
-# #centos2.check_is_booted_up()
-# centos2.login("root", "25814@root")
-# centos2.cmd("echo 1 > test3")
-
-
-# #versuch1 = connection(centos2.get_serial_device, username="root")
-# #versuch1.login()
-# #versuch1.command("cd / && ls")
-
-# input("Press Enter to continue...")
-# centos2.shutdown()
-# centos2.revert_snapshot()
-# centos2.undefine()
-
 # A class which define and undefine a virtual network based on an xml file
 class network():
     def __init__(self, path):
@@ -683,7 +374,6 @@ class recipe():
 
         for line in self.raw_recipe:
             print(line)
-
 
 
 class test():
@@ -732,8 +422,6 @@ class test():
 
     def virtual_environ_stop():
         pass
-
-
 
 
 # Should return all vms and networks in a list
@@ -786,71 +474,6 @@ class virtual_environ():
                 os.path.normpath(self.path + "/" + self.config[_machine]["snapshot_xml_file"])))
 
         return machines
-
-
-
-
-
-# def command(self, command):
-#     self._send_command(command)
-
-#    while True:
-#        line = self.readline()
-
-#        print (line)
-
-#        print("Hello")
-
-#        print("World")
-
-#        Hello
-#        World
-
-#        Hello World
-
-#        # Peek for prompt?
-#        if self.back_at_prompt():
-#            break
-
-# def back_at_prompt():
-#     data = self.peek()
-
-#     if not char == "[":
-#         return False
-
-#     data = self.peek(in_waiting)
-#     m = re.search(..., data)
-#     if m:
-#         return True
-
-
-
-
-
-# class connection()
-#     buffer = b""
-
-#     def read(self, size=1):
-#         if len(buffer) >= size:
-#             # throw away first size bytes in buffer
-#             data, buffer = buffer[:size], buffer[size:]
-#             return data
-
-#         return self.serial.read(size)
-
-#     def peek(self, size=1):
-#         if len(buffer) <= size:
-#             buffer += self.serial.read(size=size - len(buffer))
-
-#         return buffer[:size]
-
-
-#     def readline(self):
-#         buffer = buffer + self.serial.read(in_wating)
-#         if "\n" in buffer:
-#             return alle zeichen bis zum \n
-
-#         return buffer + self.serial.readline()
 
 
 if __name__ == "__main__":
