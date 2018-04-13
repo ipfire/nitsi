@@ -1,0 +1,3 @@
+alice: echo "Hello World"
+bob: echo "Hello World"
+all: echo "Hello World, at all machines"

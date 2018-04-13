@@ -1,0 +1,18 @@
+[DEFAULT]
+name = Basic
+machines = alice, bob
+networks = network1, network2
+
+[alice]
+xml_file = machines/alice/machine.xml
+snapshot_xml_file = machines/alice/snapshot.xml
+
+[bob]
+xml_file = machines/bob/machine.xml
+snapshot_xml_file = machines/bob/snapshot.xml
+
+[network1]
+xml_file = network/network1/network.xml
+
+[network2]
+xml_file = network/network2/network.xml

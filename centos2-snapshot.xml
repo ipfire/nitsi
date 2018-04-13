@@ -1,0 +1,9 @@
+<domainsnapshot>
+  <description>Snapshot to undo all changes from this test</description>
+  <memory>no</memory>
+  <disks>
+    <disk name='/var/lib/libvirt/images/centos.qcow2'>
+      <!-- <source file='/home/jonatan/python-testing-kvm/hcentos-snap.qcow2'/> -->
+    </disk>
+  </disks>
+</domainsnapshot>
