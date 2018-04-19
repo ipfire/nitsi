@@ -10,7 +10,6 @@ import libvirt
 
 import xml.etree.ElementTree as ET
 
-import inspect
 import os
 
 import configparser
@@ -107,7 +106,6 @@ class vm():
             raise BaseException
 
     def revert_snapshot(self):
-        print(inspect.getmembers(self.dom, predicate=inspect.ismethod))
         self.dom.revertToSnapshot(self.snapshot)
         self.snapshot.delete()
 
