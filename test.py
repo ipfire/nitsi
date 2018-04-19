@@ -556,9 +556,21 @@ class virtual_environ():
             self.log.debug(_machine)
             machines.setdefault(_machine, vm(
                 os.path.normpath(self.path + "/" + self.config[_machine]["xml_file"]),
-                os.path.normpath(self.path + "/" + self.config[_machine]["snapshot_xml_file"])))
+                os.path.normpath(self.path + "/" + self.config[_machine]["snapshot_xml_file"]),
+                self.config[_machine]["image"],
+                self.config[_machine]["root_uid"],
+                self.config[_machine]["username"],
+                self.config[_machine]["password"]))
 
         return machines
+
+    @property
+    def machine_names(self):
+        return self.machines
+
+    @property
+    def network_names(self):
+        return self.networks
 
 
 if __name__ == "__main__":
