@@ -469,16 +469,44 @@ class test():
         self.virtual_machines = self.virtual_environ.get_machines()
 
     def virtual_environ_start(self):
-        pass
+        for name in self.virtual_environ.network_names:
+            self.virtual_networks[name].define()
+            self.virtual_networks[name].start()
+
+        for name in self.virtual_environ.machine_names:
+            self.virtual_machines[name].define()
+            self.virtual_machines[name].create_snapshot()
+            self.virtual_machines[name].start()
+
+        self.log.debug("Try to login on all machines")
+        for name in self.virtual_environ.machine_names:
+            self.virtual_machines[name].login()
 
     def load_recipe(self):
-        pass
+        try:
+            self.recipe = recipe(self.recipe_file)
+        except BaseException:
+            self.log.error("Failed to load recipe")
+            exit(1)
 
-    def run_recipe():
-        pass
+    def run_recipe(self):
+        for line in self.recipe.recipe:
+            return_value = self.virtual_machines[line[0]].cmd(line[2])
+            if not return_value and line[1] == "":
+                self.log.error("Failed to execute command '{}' on {}".format(line[2],line[0]))
+                return False
+            elif return_value == True and line[1] == "!":
+                self.log.error("Succeded to execute command '{}' on {}".format(line[2],line[0]))
+                return False
 
-    def virtual_environ_stop():
-        pass
+    def virtual_environ_stop(self):
+        for name in self.virtual_environ.machine_names:
+            self.virtual_machines[name].shutdown()
+            self.virtual_machines[name].revert_snapshot()
+            self.virtual_machines[name].undefine()
+
+        for name in self.virtual_environ.network_names:
+            self.virtual_networks[name].undefine()
 
 
 # Should return all vms and networks in a list
