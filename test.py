@@ -109,7 +109,7 @@ class vm():
     def revert_snapshot(self):
         print(inspect.getmembers(self.dom, predicate=inspect.ismethod))
         self.dom.revertToSnapshot(self.snapshot)
-        #self.dom.SnapshotDelete(self.snapshot)
+        self.snapshot.delete()
 
     def is_running(self):
 
