@@ -53,7 +53,7 @@ class libvirt_con():
 
 
 class vm():
-    def __init__(self, vm_xml_file, snapshot_xml_file, image, root_uid):
+    def __init__(self, vm_xml_file, snapshot_xml_file, image, root_uid, username, password):
         self.log = log(4)
         self.con = libvirt_con("qemu:///system")
         try:
@@ -74,6 +74,9 @@ class vm():
             self.log.error("No such file: {}".format(self.image))
 
         self.root_uid = root_uid
+
+        self.username = username
+        self.password = password
 
     def define(self):
         self.dom = self.con.con.defineXML(self.vm_xml)
@@ -137,10 +140,10 @@ class vm():
 
         #serial_con.close()
 
-    def login(self, username, password):
+    def login(self):
         try:
-            self.serial_con = connection(self.get_serial_device(), username="root")
-            self.serial_con.login("25814@root")
+            self.serial_con = connection(self.get_serial_device(), username=self.username)
+            self.serial_con.login(self.password)
         except BaseException as e:
             self.log.error("Could not connect to the domain via serial console")
 
