@@ -376,12 +376,19 @@ class network():
 
 
 
+class RecipeExeption(Exception):
+    pass
+
+
+
 # Should read the test, check if the syntax are valid
 # and return tuples with the ( host, command ) structure
 class recipe():
     def __init__(self, path):
         self.log = log(4)
         self.recipe_file = path
+        self._recipe = None
+
         if not os.path.isfile(self.recipe_file):
             self.log.error("No such file: {}".format(self.recipe_file))
 
@@ -391,8 +398,38 @@ class recipe():
         except FileNotFoundError as error:
             self.log.error("No such file: {}".format(vm_xml_file))
 
+    @property
+    def recipe(self):
+        if not self._recipe:
+            self.parse()
+
+        return self._recipe
+
+    def parse(self):
+        self._recipe = []
+        i = 1
         for line in self.raw_recipe:
-            print(line)
+            raw_line = line.split(":")
+            if len(raw_line) < 2:
+                self.log.error("Error parsing the recipe in line {}".format(i))
+                raise RecipeExeption
+            cmd = raw_line[1]
+            raw_line = raw_line[0].strip().split(" ")
+            if len(raw_line) == 0:
+                self.log.error("Failed to parse the recipe in line {}".format(i))
+                raise RecipeExeption
+            elif len(raw_line) == 1:
+                if raw_line[0] == "":
+                    self.log.error("Failed to parse the recipe in line {}".format(i))
+                    raise RecipeExeption
+                machine = raw_line[0]
+                extra = ""
+            elif len(raw_line) == 2:
+                machine = raw_line[0]
+                extra = raw_line[1]
+
+            self._recipe.append((machine.strip(), extra.strip(), cmd.strip()))
+            i = i + 1
 
 
 class test():
