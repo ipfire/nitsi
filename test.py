@@ -582,7 +582,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    _recipe = recipe("/home/jonatan/python-testing-kvm/test/recipe")
     currenttest = test(args.dir)
     currenttest.read_settings()
     currenttest.virtual_environ_setup()
+    currenttest.load_recipe()
+    currenttest.virtual_environ_start()
+    currenttest.run_recipe()
+    currenttest.virtual_environ_stop()
