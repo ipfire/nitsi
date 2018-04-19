@@ -6,10 +6,18 @@ networks = network1, network2
 [alice]
 xml_file = machines/alice/machine.xml
 snapshot_xml_file = machines/alice/snapshot.xml
+image = /var/lib/libvirt/images/alice.qcow2
+root_uid = 8888
+username = root
+password = 25814@root
 
 [bob]
 xml_file = machines/bob/machine.xml
 snapshot_xml_file = machines/bob/snapshot.xml
+image = /var/lib/libvirt/images/bob.qcow2
+root_uid = 8888
+username = root
+password = 25814@root
 
 [network1]
 xml_file = network/network1/network.xml
