@@ -72,7 +72,7 @@ class vm():
         self.image = image
 
         if not os.path.isfile(self.image):
-            self.log.error("No such file: {}".format(self.settings_file))
+            self.log.error("No such file: {}".format(self.image))
 
         self.root_uid = root_uid
 
