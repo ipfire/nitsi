@@ -515,12 +515,15 @@ class test():
     def run_recipe(self):
         for line in self.recipe.recipe:
             return_value = self.virtual_machines[line[0]].cmd(line[2])
-            if not return_value and line[1] == "":
-                self.log.error("Failed to execute command '{}' on {}".format(line[2],line[0]))
+            self.log.debug("Return value is: {}".format(return_value))
+            if return_value != "0" and line[1] == "":
+                self.log.error("Failed to execute command '{}' on {}, return code: {}".format(line[2],line[0], return_value))
                 return False
-            elif return_value == True and line[1] == "!":
-                self.log.error("Succeded to execute command '{}' on {}".format(line[2],line[0]))
+            elif return_value == "0" and line[1] == "!":
+                self.log.error("Succeded to execute command '{}' on {}, return code: {}".format(line[2],line[0],return_value))
                 return False
+            else:
+                self.log.debug("Command '{}' on {} returned with: {}".format(line[2],line[0],return_value))
 
     def virtual_environ_stop(self):
         for name in self.virtual_environ.machine_names:
