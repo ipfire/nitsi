@@ -308,11 +308,6 @@ class connection():
 
         # Read all line till we get login:
         while 1:
-            data = self.peek()
-            if not data.decode() == "l":
-                self.log.debug("We get no l at the start")
-                self.log_console_line(self.readline().decode())
-
             # We need to use self.in_waiting because with self.con.in_waiting we get
             # not the complete string
             size = len(self.buffer) + self.in_waiting
