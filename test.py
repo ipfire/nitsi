@@ -355,7 +355,7 @@ class connection():
         self.con.flush()
 
     def command(self, command):
-        self.write("{}\n".format(command))
+        self.write("{}; echo \"END: $?\"\n".format(command))
 
         # We need to read out the prompt for this command first
         # If we do not do this we will break the loop immediately
@@ -366,6 +366,13 @@ class connection():
         while not self.back_at_prompt():
             data = self.readline()
             self.log_console_line(data.decode())
+
+        # We saved our exit code in data (the last line)
+        self.log.debug(data.decode())
+        data = data.decode().replace("END: ", "")
+        self.log.debug(data)
+        self.log.debug(data.strip())
+        return data.strip()
 
 
 # A class which define and undefine a virtual network based on an xml file
