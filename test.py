@@ -274,10 +274,25 @@ class connection():
             print("We are  not logged in")
             return False
 
+    def print_lines_in_buffer(self):
+        while True:
+            self.log.debug("Fill buffer ...")
+            self.peek(len(self.buffer) + self.in_waiting)
+            self.log.debug("Current buffer length: {}".format(len(self.buffer)))
+            if self.line_in_buffer() == True:
+                while self.line_in_buffer() == True:
+                    data = self.readline()
+                    self.log_console_line(data.decode())
+            else:
+                self.log.debug("We have printed all lines in the buffer")
+                break
+
     def login(self, password):
         if self.username == None:
             self.log.error("Username cannot be blank")
             return False
+
+        self.print_lines_in_buffer()
 
         # Hit enter to see what we get
         self.con.write(b'\n')
@@ -285,6 +300,7 @@ class connection():
         data = self.readline()
         self.log_console_line(data.decode())
 
+        self.print_lines_in_buffer()
 
         if self.back_at_prompt():
             self.log.debug("We are already logged in.")
