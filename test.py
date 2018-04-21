@@ -233,6 +233,11 @@ class connection():
 
         return self.con.in_waiting
 
+    def line_in_buffer(self):
+        if b"\n" in self.buffer:
+            return True
+
+        return False
 
     def readline2(self, pattern=None):
         string = ""
