@@ -414,6 +414,12 @@ class recipe():
         self.path = os.path.dirname(self.recipe_file)
         self.log.debug("Path of recipe is: {}".format(self.recipe_file))
         self._recipe = None
+        self._machines = None
+
+        self.in_recursion = True
+        if len(circle) == 0:
+            self.in_recursion = False
+
         self.circle = circle
         self.log.debug(circle)
         self.log.debug(self.circle)
@@ -433,6 +439,16 @@ class recipe():
             self.parse()
 
         return self._recipe
+
+    @property
+    def machines(self):
+        if not self._machines:
+            self._machines = []
+            for line in self._recipe:
+                if line[0] != "all" and line[0] not in self._machines:
+                    self._machines.append(line[0])
+
+        return self._machines
 
     def parse(self):
         self._recipe = []
@@ -475,6 +491,18 @@ class recipe():
             else:
                 self._recipe.append((machine.strip(), extra.strip(), cmd.strip()))
             i = i + 1
+
+            if not self.in_recursion:
+                tmp_recipe = []
+                for line in self._recipe:
+                    if line[0] != "all":
+                        tmp_recipe.append(line)
+                    else:
+                        for machine in self.machines:
+                            tmp_recipe.append((machine.strip(), line[1], line[2]))
+
+                self._recipe = tmp_recipe
+
 
 
 class test():
