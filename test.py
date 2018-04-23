@@ -489,7 +489,10 @@ class recipe():
             if machine == "include":
                 self._recipe.extend(recipe_to_include.recipe)
             else:
-                self._recipe.append((machine.strip(), extra.strip(), cmd.strip()))
+                # Support also something like 'alice,bob: echo'
+                machines = machine.split(",")
+                for machine in machines:
+                    self._recipe.append((machine.strip(), extra.strip(), cmd.strip()))
             i = i + 1
 
             if not self.in_recursion:
