@@ -633,6 +633,11 @@ if __name__ == "__main__":
     currenttest.read_settings()
     currenttest.virtual_environ_setup()
     currenttest.load_recipe()
-    currenttest.virtual_environ_start()
-    currenttest.run_recipe()
-    currenttest.virtual_environ_stop()
+    try:
+        currenttest.virtual_environ_start()
+        currenttest.run_recipe()
+    except BaseException as e:
+        print(e)
+    finally:
+        currenttest.virtual_environ_stop()
+
