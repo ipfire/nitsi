@@ -408,10 +408,15 @@ class RecipeExeption(Exception):
 # Should read the test, check if the syntax are valid
 # and return tuples with the ( host, command ) structure
 class recipe():
-    def __init__(self, path):
+    def __init__(self, path, circle=[]):
         self.log = log(4)
         self.recipe_file = path
+        self.path = os.path.dirname(self.recipe_file)
+        self.log.debug("Path of recipe is: {}".format(self.recipe_file))
         self._recipe = None
+        self.circle = circle
+        self.log.debug(circle)
+        self.log.debug(self.circle)
 
         if not os.path.isfile(self.recipe_file):
             self.log.error("No such file: {}".format(self.recipe_file))
@@ -446,13 +451,36 @@ class recipe():
                 if raw_line[0] == "":
                     self.log.error("Failed to parse the recipe in line {}".format(i))
                     raise RecipeExeption
-                machine = raw_line[0]
-                extra = ""
+                # We could get a machine here or a include statement
+                if raw_line[0].strip() == "include":
+                    path = cmd.strip()
+                    path = os.path.normpath(self.path + "/" + path)
+                    path = path + "/recipe"
+                    if path in self.circle:
+                        self.log.error("Detect import loop!")
+                        raise RecipeExeption
+                    self.circle.append(path)
+                    recipe_to_include = recipe(path, circle=self.circle)
+                else:
+                    machine = raw_line[0]
+                    extra = ""
             elif len(raw_line) == 2:
-                machine = raw_line[0]
-                extra = raw_line[1]
-
-            self._recipe.append((machine.strip(), extra.strip(), cmd.strip()))
+                if raw_line[0].strip() == "include":
+                    path = cmd
+                    path = os.path.normpath(self.path + "/" + path)
+                    path = path + "/recipe"
+                    if path in self.circle:
+                        self.log.error("Detect import loop!")
+                        raise RecipeExeption
+                    self.circle.append(path)
+                    recipe_to_include = recipe(path, circle=self.circle)
+                else:
+                    machine = raw_line[0]
+                    extra = raw_line[1]
+            if raw_line[0].strip() == "include":
+                self._recipe.extend(recipe_to_include.recipe)
+            else:
+                self._recipe.append((machine.strip(), extra.strip(), cmd.strip()))
             i = i + 1
 
 
