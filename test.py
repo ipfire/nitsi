@@ -442,42 +442,35 @@ class recipe():
             if len(raw_line) < 2:
                 self.log.error("Error parsing the recipe in line {}".format(i))
                 raise RecipeExeption
-            cmd = raw_line[1]
+            cmd = raw_line[1].strip()
             raw_line = raw_line[0].strip().split(" ")
             if len(raw_line) == 0:
                 self.log.error("Failed to parse the recipe in line {}".format(i))
                 raise RecipeExeption
-            elif len(raw_line) == 1:
-                if raw_line[0] == "":
+
+            if raw_line[0].strip() == "":
                     self.log.error("Failed to parse the recipe in line {}".format(i))
                     raise RecipeExeption
-                # We could get a machine here or a include statement
-                if raw_line[0].strip() == "include":
-                    path = cmd.strip()
-                    path = os.path.normpath(self.path + "/" + path)
-                    path = path + "/recipe"
-                    if path in self.circle:
-                        self.log.error("Detect import loop!")
-                        raise RecipeExeption
-                    self.circle.append(path)
-                    recipe_to_include = recipe(path, circle=self.circle)
-                else:
-                    machine = raw_line[0]
-                    extra = ""
-            elif len(raw_line) == 2:
-                if raw_line[0].strip() == "include":
-                    path = cmd
-                    path = os.path.normpath(self.path + "/" + path)
-                    path = path + "/recipe"
-                    if path in self.circle:
-                        self.log.error("Detect import loop!")
-                        raise RecipeExeption
-                    self.circle.append(path)
-                    recipe_to_include = recipe(path, circle=self.circle)
-                else:
-                    machine = raw_line[0]
-                    extra = raw_line[1]
-            if raw_line[0].strip() == "include":
+
+            machine = raw_line[0].strip()
+
+            if len(raw_line) == 2:
+                extra = raw_line[1].strip()
+            else:
+                extra = ""
+
+            # We could get a machine here or a include statement
+            if machine == "include":
+                path = cmd.strip()
+                path = os.path.normpath(self.path + "/" + path)
+                path = path + "/recipe"
+                if path in self.circle:
+                    self.log.error("Detect import loop!")
+                    raise RecipeExeption
+                self.circle.append(path)
+                recipe_to_include = recipe(path, circle=self.circle)
+
+            if machine == "include":
                 self._recipe.extend(recipe_to_include.recipe)
             else:
                 self._recipe.append((machine.strip(), extra.strip(), cmd.strip()))
