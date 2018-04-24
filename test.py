@@ -14,6 +14,8 @@ import os
 
 import configparser
 
+from disk import disk
+
 class log():
     def __init__(self, log_level):
         self.log_level = log_level
@@ -74,6 +76,7 @@ class vm():
             self.log.error("No such file: {}".format(self.image))
 
         self.root_uid = root_uid
+        self.disk = disk(image)
 
         self.username = username
         self.password = password
@@ -150,6 +153,15 @@ class vm():
     def cmd(self, cmd):
         return self.serial_con.command(cmd)
 
+    def copy_in(self, fr, to):
+        try:
+            self.disk.mount(self.root_uid, "/")
+            self.disk.copy_in(fr, to)
+        except BaseException as e:
+            self.log.error(e)
+        finally:
+            self.disk.umount("/")
+            self.disk.close()
 
 class connection():
     def __init__(self, device, username=None):
@@ -531,6 +543,17 @@ class test():
         self.config.read(self.settings_file)
         self.name = self.config["DEFAULT"]["Name"]
         self.description = self.config["DEFAULT"]["Description"]
+        self.copy_to = self.config["DEFAULT"]["Copy_to"]
+        self.copy_from = self.config["DEFAULT"]["Copy_from"]
+        self.copy_from = self.copy_from.split(",")
+
+        tmp = []
+        for file in self.copy_from:
+            file = file.strip()
+            file = os.path.normpath(self.path + "/" + file)
+            tmp.append(file)
+
+        self.copy_from = tmp
 
         self.virtual_environ_name = self.config["VIRTUAL_ENVIRONMENT"]["Name"]
         self.virtual_environ_path = self.config["VIRTUAL_ENVIRONMENT"]["Path"]
@@ -551,6 +574,7 @@ class test():
         for name in self.virtual_environ.machine_names:
             self.virtual_machines[name].define()
             self.virtual_machines[name].create_snapshot()
+            self.virtual_machines[name].copy_in(self.copy_from, self.copy_to)
             self.virtual_machines[name].start()
 
         self.log.debug("Try to login on all machines")
