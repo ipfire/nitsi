@@ -135,7 +135,7 @@ class machine():
         return elem.get("path")
 
     def check_is_booted_up(self):
-        serial_con = connection(self.get_serial_device())
+        serial_con = serial_connection(self.get_serial_device())
 
         serial_con.write("\n")
         # This will block till the domain is booted up
@@ -145,7 +145,7 @@ class machine():
 
     def login(self):
         try:
-            self.serial_con = connection(self.get_serial_device(), username=self.username)
+            self.serial_con = serial_connection(self.get_serial_device(), username=self.username)
             self.serial_con.login(self.password)
         except BaseException as e:
             self.log.error("Could not connect to the domain via serial console")
@@ -163,7 +163,7 @@ class machine():
             self.disk.umount("/")
             self.disk.close()
 
-class connection():
+class serial_connection():
     def __init__(self, device, username=None):
         self.buffer = b""
         self.back_at_prompt_pattern =  None
