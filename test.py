@@ -251,41 +251,6 @@ class connection():
 
         return False
 
-    def readline2(self, pattern=None):
-        string = ""
-        string2 = b""
-        if pattern:
-            pattern = re.compile(pattern)
-
-        while 1:
-            char = self.con.read(1)
-            string = string + char.decode("utf-8")
-            string2 = string2 + char
-            #print(char)
-            print(char.decode("utf-8"), end="")
-
-            #print(string2)
-            if pattern and pattern.match(string):
-               #print("get here1")
-               #print(string2)
-               return {"string" : string, "return-code" : 1}
-
-            if char == b"\n":
-                #print(char)
-                #print(string2)
-                #print("get here2")
-                return {"return-code" : 0}
-
-    def check_logged_in(self, username):
-        pattern = "^\[" + username + "@.+\]#"
-        data = self.readline(pattern=pattern)
-        if data["return-code"] == 1:
-                print("We are logged in")
-                return True
-        else:
-            print("We are  not logged in")
-            return False
-
     def print_lines_in_buffer(self):
         while True:
             self.log.debug("Fill buffer ...")
