@@ -139,24 +139,4 @@ class test():
             self.virtual_networks[name].undefine()
 
 
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument("-d", "--directory", dest="dir")
-
-    args = parser.parse_args()
-
-    currenttest = test(args.dir)
-    currenttest.read_settings()
-    currenttest.virtual_environ_setup()
-    currenttest.load_recipe()
-    try:
-        currenttest.virtual_environ_start()
-        currenttest.run_recipe()
-    except BaseException as e:
-        print(e)
-    finally:
-        currenttest.virtual_environ_stop()
 
