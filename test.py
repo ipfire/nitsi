@@ -54,7 +54,7 @@ class libvirt_con():
         return self.connection
 
 
-class vm():
+class machine():
     def __init__(self, vm_xml_file, snapshot_xml_file, image, root_uid, username, password):
         self.log = log(4)
         self.con = libvirt_con("qemu:///system")
@@ -621,7 +621,7 @@ class virtual_environ():
         machines = {}
         for _machine in self.machines:
             self.log.debug(_machine)
-            machines.setdefault(_machine, vm(
+            machines.setdefault(_machine, machine(
                 os.path.normpath(self.path + "/" + self.config[_machine]["xml_file"]),
                 os.path.normpath(self.path + "/" + self.config[_machine]["snapshot_xml_file"]),
                 self.config[_machine]["image"],
