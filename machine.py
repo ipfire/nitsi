@@ -38,7 +38,7 @@ class machine():
         self.password = password
 
     def define(self):
-        self.dom = self.con.con.defineXML(self.vm_xml)
+        self.dom = self.con.defineXML(self.vm_xml)
         if self.dom == None:
             self.log.error("Could not define VM")
             raise BaseException

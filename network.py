@@ -12,7 +12,7 @@ class network():
             self.log.error("No such file: {}".format(vm_xml_file))
 
     def define(self):
-        self.network = self.con.con.networkDefineXML(self.network_xml)
+        self.network = self.con.networkDefineXML(self.network_xml)
 
         if network == None:
             self.log.error("Failed to define virtual network")
