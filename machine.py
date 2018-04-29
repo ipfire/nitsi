@@ -9,10 +9,13 @@ from serial_connection import serial_connection
 import os
 import libvirt
 
+import logging
+
+logger = logging.getLogger("nitsi.machine")
 
 class machine():
     def __init__(self, libvirt_con, vm_xml_file, snapshot_xml_file, image, root_uid, username, password):
-        self.log = log(4)
+        self.log = logger.getChild(os.path.basename(vm_xml_file))
         self.con = libvirt_con
         try:
             with open(vm_xml_file) as fobj:

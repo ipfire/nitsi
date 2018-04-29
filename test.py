@@ -7,26 +7,20 @@ import os
 
 import configparser
 
-from disk import disk
+from virtual_environ import virtual_environ
+from recipe import recipe
 
-class log():
-    def __init__(self, log_level):
-        self.log_level = log_level
+import logging
 
-    def debug(self, string):
-        if self.log_level >= 4:
-            print("DEBUG: {}".format(string))
-
-    def error(self, string):
-        print("ERROR: {}".format(string))
+logger = logging.getLogger("nitsi.test")
 
 class test():
     def __init__(self, path):
-        self.log = log(4)
         try:
             self.path = os.path.abspath(path)
+            self.log = logger.getChild(os.path.basename(self.path))
         except BaseException as e:
-            self.log.error("Could not get absolute path")
+            logger.error("Could not get absolute path")
 
         self.log.debug(self.path)
 
@@ -79,6 +73,7 @@ class test():
 
         self.log.debug("Try to login on all machines")
         for name in self.virtual_environ.machine_names:
+            self.log.debug("Try to login on {}".format(name))
             self.virtual_machines[name].login()
 
     def load_recipe(self):

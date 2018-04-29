@@ -2,16 +2,20 @@
 import serial
 
 import re
+import os
 
 from time import sleep
 import sys
+import logging
+
+logger = logging.getLogger("nitsi.serial")
 
 class serial_connection():
     def __init__(self, device, username=None):
         self.buffer = b""
         self.back_at_prompt_pattern =  None
         self.username = username
-        self.log = log(1)
+        self.log = logger.getChild(os.path.basename(device))
         self.con = serial.Serial(device)
 
     def read(self, size=1):

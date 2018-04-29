@@ -2,6 +2,10 @@
 
 import os
 
+import logging
+
+logger = logging.getLogger("nitsi.recipe")
+
 
 
 class RecipeExeption(Exception):
@@ -13,8 +17,8 @@ class RecipeExeption(Exception):
 # and return tuples with the ( host, command ) structure
 class recipe():
     def __init__(self, path, circle=[]):
-        self.log = log(4)
         self.recipe_file = path
+        self.log = logger.getChild(os.path.basename(self.recipe_file))
         self.path = os.path.dirname(self.recipe_file)
         self.log.debug("Path of recipe is: {}".format(self.recipe_file))
         self._recipe = None

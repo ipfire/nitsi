@@ -7,12 +7,15 @@ from network import network
 import os
 import configparser
 import libvirt
+import logging
+
+logger = logging.getLogger("nitsi.virtual_environ")
 
 # Should return all vms and networks in a list
 # and should provide the path to the necessary xml files
 class virtual_environ():
     def __init__(self, path):
-        self.log = log(4)
+        self.log = logger.getChild(os.path.basename(os.path.abspath(path)))
         try:
             self.path = os.path.abspath(path)
         except BaseException as e:
