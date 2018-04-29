@@ -84,9 +84,11 @@ class test():
     def load_recipe(self):
         try:
             self.recipe = recipe(self.recipe_file)
-        except BaseException:
+            for line in self.recipe.recipe:
+                self.log.debug(line)
+        except BaseException as e:
             self.log.error("Failed to load recipe")
-            exit(1)
+            raise e
 
     def run_recipe(self):
         for line in self.recipe.recipe:
