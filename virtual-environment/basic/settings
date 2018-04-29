@@ -2,12 +2,13 @@
 name = Basic
 machines = alice, bob
 networks = network1, network2
+uri = qemu:///system
 
 [alice]
 xml_file = machines/alice/machine.xml
 snapshot_xml_file = machines/alice/snapshot.xml
 image = /var/lib/libvirt/images/alice.qcow2
-root_uid = 8888
+root_uid = 45598e92-3487-4a1b-961d-79aa3dd42a7d
 username = root
 password = 25814@root
 
@@ -15,7 +16,7 @@ password = 25814@root
 xml_file = machines/bob/machine.xml
 snapshot_xml_file = machines/bob/snapshot.xml
 image = /var/lib/libvirt/images/bob.qcow2
-root_uid = 8888
+root_uid = 45598e92-3487-4a1b-961d-79aa3dd42a7d
 username = root
 password = 25814@root
 
