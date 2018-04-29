@@ -6,16 +6,14 @@ from disk import disk
 
 from serial_connection import serial_connection
 
-from test import libvirt_con
-
 import os
 import libvirt
 
 
 class machine():
-    def __init__(self, vm_xml_file, snapshot_xml_file, image, root_uid, username, password):
+    def __init__(self, libvirt_con, vm_xml_file, snapshot_xml_file, image, root_uid, username, password):
         self.log = log(4)
-        self.con = libvirt_con("qemu:///system")
+        self.con = libvirt_con
         try:
             with open(vm_xml_file) as fobj:
                 self.vm_xml = fobj.read()

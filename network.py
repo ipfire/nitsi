@@ -2,9 +2,9 @@
 
 # # A class which define and undefine a virtual network based on an xml file
 class network():
-    def __init__(self, network_xml_file):
+    def __init__(self, libvirt_con, network_xml_file):
         self.log = log(4)
-        self.con = libvirt_con("qemu:///system")
+        self.con = libvirt_con
         try:
             with open(network_xml_file) as fobj:
                 self.network_xml = fobj.read()

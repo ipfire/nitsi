@@ -20,34 +20,6 @@ class log():
     def error(self, string):
         print("ERROR: {}".format(string))
 
-class libvirt_con():
-    def __init__(self, uri):
-        self.log = log(4)
-        self.uri = uri
-        self.connection = None
-
-    def get_domain_from_name(self, name):
-        dom = self.con.lookupByName(name)
-
-        if dom == None:
-            raise BaseException
-        return dom
-
-    @property
-    def con(self):
-        if self.connection == None:
-            try:
-                self.connection = libvirt.open(self.uri)
-            except BaseException as error:
-                self.log.error("Could not connect to: {}".format(self.uri))
-
-            self.log.debug("Connected to: {}".format(self.uri))
-            return self.connection
-
-        return self.connection
-
-
-
 class test():
     def __init__(self, path):
         self.log = log(4)

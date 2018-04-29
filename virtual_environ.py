@@ -6,6 +6,7 @@ from network import network
 
 import os
 import configparser
+import libvirt
 
 # Should return all vms and networks in a list
 # and should provide the path to the necessary xml files
@@ -41,11 +42,20 @@ class virtual_environ():
         self.log.debug(self.machines)
         self.log.debug(self.networks)
 
+        self.uri = self.config["DEFAULT"]["uri"]
+
+        try:
+            self.con = libvirt.open(self.uri)
+        except BaseException as error:
+            self.log.error("Could not connect to: {}".format(self.uri))
+
+        self.log.debug("Connected to: {}".format(self.uri))
+
     def get_networks(self):
         networks = {}
         for _network in self.networks:
             self.log.debug(_network)
-            networks.setdefault(_network, network(os.path.normpath(self.path + "/" + self.config[_network]["xml_file"])))
+            networks.setdefault(_network, network(self.con, os.path.normpath(self.path + "/" + self.config[_network]["xml_file"])))
         return networks
 
     def get_machines(self):
@@ -53,6 +63,7 @@ class virtual_environ():
         for _machine in self.machines:
             self.log.debug(_machine)
             machines.setdefault(_machine, machine(
+                self.con,
                 os.path.normpath(self.path + "/" + self.config[_machine]["xml_file"]),
                 os.path.normpath(self.path + "/" + self.config[_machine]["snapshot_xml_file"]),
                 self.config[_machine]["image"],
