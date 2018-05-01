@@ -18,8 +18,14 @@ class RecipeExeption(Exception):
 class recipe():
     def __init__(self, path, circle=[]):
         self.recipe_file = path
-        self.log = logger.getChild(os.path.basename(self.recipe_file))
-        self.path = os.path.dirname(self.recipe_file)
+        try:
+            self.path = os.path.dirname(self.recipe_file)
+            self.name = os.path.basename(self.path)
+        except BaseException as e:
+            logger.error("Failed to get the name of the test to this recipe")
+            raise e
+
+        self.log = logger.getChild(self.name)
         self.log.debug("Path of recipe is: {}".format(self.recipe_file))
         self._recipe = None
         self._machines = None
