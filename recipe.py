@@ -68,7 +68,7 @@ class recipe():
         self._recipe = []
         i = 1
         for line in self.raw_recipe:
-            raw_line = line.split(":")
+            raw_line = line.split(":", 1)
             if len(raw_line) < 2:
                 self.log.error("Error parsing the recipe in line {}".format(i))
                 raise RecipeExeption
