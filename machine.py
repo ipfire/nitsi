@@ -21,7 +21,16 @@ class machine():
             with open(vm_xml_file) as fobj:
                 self.vm_xml = fobj.read()
         except FileNotFoundError as error:
-            self.log.error("No such file: {}".format(vm_xml_file))
+            logger.error("No such file: {}".format(vm_xml_file))
+
+        try:
+            self.name = self.get_name()
+        except BaseException as error:
+            logger.error("Could not get name of the machine: {}".format(vm_xml_file))
+            raise error
+
+        self.log = logger.getChild(self.name)
+        self.log.debug("Name of this machine is {}".format(self.name))
 
         try:
             with open(snapshot_xml_file) as fobj:
@@ -92,6 +101,12 @@ class machine():
 
         elem = xml_root.find("./devices/serial/source")
         return elem.get("path")
+
+    def get_name(self):
+        xml_root = ET.fromstring(self.vm_xml)
+
+        elem = xml_root.find("./name")
+        return elem.text
 
     def check_is_booted_up(self):
         serial_con = serial_connection(self.get_serial_device())
