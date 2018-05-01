@@ -16,6 +16,7 @@ class serial_connection():
         self.back_at_prompt_pattern =  None
         self.username = username
         self.log = logger.getChild(os.path.basename(device))
+        self.log.setLevel(logging.INFO)
         self.con = serial.Serial(device)
 
     def read(self, size=1):
