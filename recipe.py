@@ -35,11 +35,11 @@ class recipe():
             self.in_recursion = False
 
         self.circle = circle
-        self.log.debug(circle)
-        self.log.debug(self.circle)
+        self.log.debug("Tests we have already included: {}".format(self.circle))
 
         if not os.path.isfile(self.recipe_file):
-            self.log.error("No such file: {}".format(self.recipe_file))
+            self.log.error("{} is not a file".format(self.recipe_file))
+            raise RecipeExeption
 
         try:
             with open(self.recipe_file) as fobj:
