@@ -35,7 +35,7 @@ class recipe():
             self.in_recursion = False
 
         self.circle = circle
-        self.log.debug("Tests we have already included: {}".format(self.circle))
+        self.log.debug("Recipes we have already included: {}".format(self.circle))
 
         if not os.path.isfile(self.recipe_file):
             self.log.error("{} is not a file".format(self.recipe_file))

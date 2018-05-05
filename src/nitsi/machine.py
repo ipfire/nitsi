@@ -2,9 +2,9 @@
 
 import xml.etree.ElementTree as ET
 
-from disk import disk
+from nitsi.disk import disk
 
-from serial_connection import serial_connection
+from nitsi.serial_connection import serial_connection
 
 import os
 import libvirt

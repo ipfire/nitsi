@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-from machine import machine
+from nitsi.machine import machine
 
-from network import network
+from nitsi.network import network
 
 import os
 import configparser

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from test import test
+from nitsi.test import test
 import logging
 
 logger = logging.getLogger("nitsi")

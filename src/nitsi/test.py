@@ -7,8 +7,8 @@ import os
 
 import configparser
 
-from virtual_environ import virtual_environ
-from recipe import recipe
+from nitsi.virtual_environ import virtual_environ
+from nitsi.recipe import recipe
 
 import logging
 
@@ -22,7 +22,7 @@ class test():
         except BaseException as e:
             logger.error("Could not get absolute path")
 
-        self.log.debug(self.path)
+        self.log.debug("Path of this test is: {}".format(self.path))
 
         self.settings_file = "{}/settings".format(self.path)
         if not os.path.isfile(self.settings_file):
@@ -77,10 +77,13 @@ class test():
             self.virtual_machines[name].login()
 
     def load_recipe(self):
+        self.log.info("Going to load the recipe")
         try:
             self.recipe = recipe(self.recipe_file)
             for line in self.recipe.recipe:
                 self.log.debug(line)
+
+            self.log.debug("This was the recipe")
         except BaseException as e:
             self.log.error("Failed to load recipe")
             raise e
