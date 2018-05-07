@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger("nitsi.test")
 
 class test():
-    def __init__(self, path):
+    def __init__(self, path, log_path):
         try:
             self.path = os.path.abspath(path)
             self.log = logger.getChild(os.path.basename(self.path))
