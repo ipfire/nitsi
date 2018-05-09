@@ -13,7 +13,7 @@ from nitsi.logger import TestFormatter
 logger = logging.getLogger("nitsi.serial")
 
 class serial_connection():
-    def __init__(self, device, username=None, log_file=None, name=None):
+    def __init__(self, device, username=None, log_file=None, name=None, log_start_time=None):
         self.buffer = b""
         self.back_at_prompt_pattern =  None
         self.username = username
@@ -27,7 +27,7 @@ class serial_connection():
         log_file_handler = logging.FileHandler(self.log_file)
         log_file_handler.setLevel(logging.INFO)
         log_file_handler.terminator = ""
-        formatter = TestFormatter(name=self.name, start_time=None)
+        formatter = TestFormatter(name=self.name, start_time=log_start_time)
         log_file_handler.setFormatter(formatter)
         self.log_output.addHandler(log_file_handler)
 
