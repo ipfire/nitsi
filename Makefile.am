@@ -30,6 +30,7 @@ CLEANFILES += \
 nitsi_PYTHON = \
 	src/nitsi/__init__.py \
 	src/nitsi/disk.py \
+	src/nitsi/logger.py \
 	src/nitsi/machine.py \
 	src/nitsi/network.py \
 	src/nitsi/recipe.py \
