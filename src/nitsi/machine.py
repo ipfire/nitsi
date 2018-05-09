@@ -117,13 +117,14 @@ class machine():
 
         #serial_con.close()
 
-    def login(self, log_file, log_start_time=None):
+    def login(self, log_file, log_start_time=None, longest_machine_name=10):
         try:
             self.serial_con = serial_connection(self.get_serial_device(),
                                 username=self.username,
                                 log_file=log_file,
                                 log_start_time=log_start_time,
-                                name=self.name)
+                                name=self.name,
+                                longest_machine_name=longest_machine_name)
             self.serial_con.login(self.password)
         except BaseException as e:
             self.log.error("Could not connect to the domain via serial console")

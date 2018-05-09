@@ -45,6 +45,9 @@ class virtual_environ():
         self.log.debug(self.machines)
         self.log.debug(self.networks)
 
+        # Number of characters of the longest machine name
+        self._longest_machine_name = 0
+
         self.uri = self.config["DEFAULT"]["uri"]
 
         try:
@@ -83,3 +86,14 @@ class virtual_environ():
     @property
     def network_names(self):
         return self.networks
+
+    @property
+    def longest_machine_name(self):
+        if self._longest_machine_name:
+            return self._longest_machine_name
+        else:
+            for _machine in self.machines:
+                if len(_machine) > self._longest_machine_name:
+                    self._longest_machine_name = len(_machine)
+
+            return self._longest_machine_name

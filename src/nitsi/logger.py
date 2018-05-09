@@ -38,7 +38,7 @@ def init_logging(path):
 
 
 class TestFormatter(logging.Formatter):
-    def __init__(self, start_time=None, name=None):
+    def __init__(self, start_time=None, name=None, longest_machine_name=10):
         super().__init__(fmt="[%(asctime)s] %(message)s")
         logger.debug("Initiating TestFormatter for")
         if start_time == None:
@@ -51,6 +51,8 @@ class TestFormatter(logging.Formatter):
         else:
             self.name = name
 
+        self.longest_machine_name = longest_machine_name
+
     def converter(self, recordtime):
 
         # This returns a timestamp relatively to the time when we started
@@ -61,7 +63,10 @@ class TestFormatter(logging.Formatter):
         return time.gmtime(recordtime)
 
     def format(self, record):
-        return "[{}][{}] {}".format(self.formatTime(record), self.name, record.getMessage())
+        return "[{}][{:^{align}}] {}".format(self.formatTime(record),
+                                                self.name,
+                                                record.getMessage(),
+                                                align=self.longest_machine_name)
 
     def formatTime(self, record, datefmt=None):
         ct = self.converter(record.created)
