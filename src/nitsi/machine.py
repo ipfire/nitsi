@@ -123,6 +123,8 @@ class machine():
             self.serial_con.login(self.password)
         except BaseException as e:
             self.log.error("Could not connect to the domain via serial console")
+            self.log.exception(e)
+            raise e
 
     def cmd(self, cmd):
         return self.serial_con.command(cmd)
