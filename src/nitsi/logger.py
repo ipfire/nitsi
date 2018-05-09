@@ -35,3 +35,36 @@ def init_logging(path):
         os.mkdir(time_dir)
 
     return time_dir
+
+
+class TestFormatter(logging.Formatter):
+    def __init__(self, start_time=None, name=None):
+        super().__init__(fmt="[%(asctime)s] %(message)s")
+        logger.debug("Initiating TestFormatter for")
+        if start_time == None:
+            self.starttime = time.time()
+        else:
+            self.starttime = start_time
+
+        if name == None:
+            self.name = ""
+        else:
+            self.name = name
+
+    def converter(self, recordtime):
+
+        # This returns a timestamp relatively to the time when we started
+        # the test.
+
+        recordtime -= self.starttime
+
+        return time.gmtime(recordtime)
+
+    def format(self, record):
+        return "[{}][{}] {}".format(self.formatTime(record), self.name, record.getMessage())
+
+    def formatTime(self, record, datefmt=None):
+        ct = self.converter(record.created)
+        t = time.strftime("%H:%M:%S", ct)
+        s = "{}.{:03d}".format(t, round(record.msecs,None))
+        return s

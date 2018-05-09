@@ -8,16 +8,28 @@ from time import sleep
 import sys
 import logging
 
+from nitsi.logger import TestFormatter
+
 logger = logging.getLogger("nitsi.serial")
 
 class serial_connection():
-    def __init__(self, device, username=None):
+    def __init__(self, device, username=None, log_file=None, name=None):
         self.buffer = b""
         self.back_at_prompt_pattern =  None
         self.username = username
-        self.log = logger.getChild(os.path.basename(device))
+        self.name = name
+        self.log_file = log_file
+        self.log = logger.getChild(name)
         self.log.setLevel(logging.INFO)
         self.con = serial.Serial(device)
+
+        self.log_output = self.log.getChild("output")
+        log_file_handler = logging.FileHandler(self.log_file)
+        log_file_handler.setLevel(logging.INFO)
+        log_file_handler.terminator = ""
+        formatter = TestFormatter(name=self.name, start_time=None)
+        log_file_handler.setFormatter(formatter)
+        self.log_output.addHandler(log_file_handler)
 
     def read(self, size=1):
         if len(self.buffer) >= size:
@@ -80,6 +92,7 @@ class serial_connection():
 
     def log_console_line(self, line):
         self.log.debug("Get in function log_console_line()")
+        self.log_output.info(line)
         sys.stdout.write(line)
 
     @property

@@ -117,9 +117,9 @@ class machine():
 
         #serial_con.close()
 
-    def login(self):
+    def login(self, log_file):
         try:
-            self.serial_con = serial_connection(self.get_serial_device(), username=self.username)
+            self.serial_con = serial_connection(self.get_serial_device(), username=self.username, log_file=log_file, name=self.name)
             self.serial_con.login(self.password)
         except BaseException as e:
             self.log.error("Could not connect to the domain via serial console")

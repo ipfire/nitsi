@@ -24,6 +24,8 @@ class test():
 
         self.log.debug("Path of this test is: {}".format(self.path))
 
+        self.log_path = log_path
+
         self.settings_file = "{}/settings".format(self.path)
         if not os.path.isfile(self.settings_file):
             self.log.error("No such file: {}".format(self.settings_file))
@@ -74,7 +76,7 @@ class test():
         self.log.debug("Try to login on all machines")
         for name in self.virtual_environ.machine_names:
             self.log.debug("Try to login on {}".format(name))
-            self.virtual_machines[name].login()
+            self.virtual_machines[name].login("{}/test.log".format(self.log_path))
 
     def load_recipe(self):
         self.log.info("Going to load the recipe")
