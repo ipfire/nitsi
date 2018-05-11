@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS/DTD DocBook XML V4.2//EN"
+	"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<refentry id="nitsi.setting">
+	<refentryinfo>
+		<title>nitsi.settings</title>
+		<productname>nitsi.settings</productname>
+
+		<authorgroup>
+			<author>
+				<contrib>Developer</contrib>
+				<firstname>Jonatan</firstname>
+				<surname>Schlag</surname>
+				<email>jonatan.schlag@ipfire.org</email>
+			</author>
+		</authorgroup>
+	</refentryinfo>
+
+	<refmeta>
+		<refentrytitle>nitsi.settings</refentrytitle>
+		<manvolnum>1</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>nitsi.settings</refname>
+		<refpurpose>Settings file for a nitsi test</refpurpose>
+	</refnamediv>
+
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>
+			The <filename>settings</filename> file is the main configuration file of the
+			<command>nitsi</command> test.
+			This file specifies runtime configuration parameters for the test
+			and set the virtual environment to use.
+		</para>
+
+		<para>
+			The syntax of the configuration file is based on the INI configuration
+			file format. Lines starting with hash (#) or semi-colon (;)
+			are ignored.
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>DEFAULT configuration</title>
+
+		<para>
+			The following options can be configured in the [DEFAULT] section:
+		</para>
+
+		<variablelist>
+			<varlistentry>
+				<term>
+					<option>Name = ""</option>
+				</term>
+
+				<listitem>
+					<para>
+						This option will configure the name of the test
+						and can be something more human readbale then the name of the test directory.
+					</para>
+
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>
+					<option>Description = ""</option>
+				</term>
+
+				<listitem>
+					<para>
+						This can be a short description of the test to explain
+						what we are trying to test and what results we expect when
+						we are running the recipe. So when do the test succeed and when do the test fails.
+					</para>
+
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>
+					<option>Copy_from = ""</option>
+				</term>
+
+				<listitem>
+					<para>
+						The files or directories which should be copied into all virtual machines.
+						The paths are relativ to the path of the test directory.
+					</para>
+
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>
+					<option>Copy_to = ""</option>
+				</term>
+
+				<listitem>
+					<para>
+						The path to which the files should be copied. For example /root/
+					</para>
+
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>VIRTUAL_ENVIRONMENT Configuration</title>
+
+		<para>
+			The following options can be configured in the [VIRTUAL_ENVIRONMENT] section:
+		</para>
+
+		<variablelist>
+			<varlistentry>
+				<term>
+					<option>Name = ""</option>
+				</term>
+
+				<listitem>
+					<para>
+						The Name of the virtual environment to use.
+					</para>
+
+				</listitem>
+			</varlistentry>
+
+					<varlistentry>
+				<term>
+					<option>path = ""</option>
+				</term>
+
+				<listitem>
+					<para>
+						The path of the virtual environment relativ to the path of the test.
+					</para>
+
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Example</title>
+
+		<example>
+
+			<simplelist>
+				<member>[DEFAULT]</member>
+				<member>Name = Hello World</member>
+				<member>Description = This is a
+    				short description.</member>
+				<member>Copy_from =</member>
+				<member>Copy_to = /root/</member>
+				<member>[VIRTUAL_ENVIRONMENT]</member>
+				<member>Name = basic</member>
+				<member>path = ../virtual-environment/basic</member>
+			</simplelist>
+		</example>
+
+	</refsect1>
+
+	<refsect1>
+		<title>Bugs</title>
+
+		<para>
+			Please report all bugs to the official bugtracker at
+			http://bugzilla.ipfire.org/.
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See Also</title>
+
+		<para>
+			<citerefentry>
+				<refentrytitle>nitsi</refentrytitle>
+				<manvolnum>1</manvolnum>
+			</citerefentry>
+		</para>
+	</refsect1>
+</refentry>

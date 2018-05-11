@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS/DTD DocBook XML V4.2//EN"
+	"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<refentry id="nitsi">
+	<refentryinfo>
+		<title>nitsi</title>
+		<productname>nitsi</productname>
+
+		<authorgroup>
+			<author>
+				<contrib>Developer</contrib>
+				<firstname>Jonatan</firstname>
+				<surname>Schlag</surname>
+				<email>jonatan.schlag@ipfire.org</email>
+			</author>
+		</authorgroup>
+	</refentryinfo>
+
+	<refmeta>
+		<refentrytitle>nitsi</refentrytitle>
+		<manvolnum>1</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>nitsi</refname>
+		<refpurpose>Networking Integration Test Suite for IPFire</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+		<cmdsynopsis>
+			<command>nitsi</command>
+			<arg choice="opt" rep="repeat">OPTIONS</arg>
+			<arg choice="plain">COMMAND</arg>
+		</cmdsynopsis>
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>
+			<command>nitsi</command> is a simple, extensible, Integration Test Suite
+				for the Network code of IPfire written in Python.
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Options</title>
+
+		<para>
+			The following options are understood:
+		</para>
+
+		<variablelist>
+			<varlistentry>
+				<term>
+					<option>-d DIRECTORY</option>
+				</term>
+				<term>
+					<option>--directory DIRECTORY</option>
+				</term>
+
+				<listitem>
+					<para>
+						Is the directory where all files of a test are located.
+						So this dir should contain at least a setting file and a recipe file
+					</para>
+
+					<para>
+						For further details of the setting file layout and the recipe file layout, please consult the
+						<citerefentry>
+							<refentrytitle>nitsi.setting</refentrytitle>
+							<manvolnum>5</manvolnum>
+						</citerefentry>
+						<citerefentry>
+							<refentrytitle>nitsi.recipe</refentrytitle>
+							<manvolnum>5</manvolnum>
+						</citerefentry>
+						manual page.
+					</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>
+					<option>-h</option>
+				</term>
+				<term>
+					<option>--help</option>
+				</term>
+
+				<listitem>
+					<para>
+						Shows the help message provided by the program and exit.
+					</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Bugs</title>
+
+		<para>
+			Please report all bugs to the official bugtracker at
+			http://bugzilla.ipfire.org/.
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See Also</title>
+
+		<para>
+			<citerefentry>
+				<refentrytitle>nitsi.setting</refentrytitle>
+				<manvolnum>5</manvolnum>
+			</citerefentry>
+			<citerefentry>
+				<refentrytitle>nitsi.recipe</refentrytitle>
+				<manvolnum>5</manvolnum>
+			</citerefentry>
+		</para>
+	</refsect1>
+</refentry>

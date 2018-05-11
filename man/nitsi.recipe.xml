@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS/DTD DocBook XML V4.2//EN"
+	"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<refentry id="nitsi.recipe">
+	<refentryinfo>
+		<title>nitsi.recipe</title>
+		<productname>nitsi</productname>
+
+		<authorgroup>
+			<author>
+				<contrib>Developer</contrib>
+				<firstname>Jonatan</firstname>
+				<surname>Schlag</surname>
+				<email>jonatan.schlag@ipfire.org</email>
+			</author>
+		</authorgroup>
+	</refentryinfo>
+
+	<refmeta>
+		<refentrytitle>nitsi.recipe</refentrytitle>
+		<manvolnum>1</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>nitsi.recipe</refname>
+		<refpurpose>Recipe file for a nitsi test</refpurpose>
+	</refnamediv>
+
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>
+			The <filename>recipe</filename> file contains the actions for a test.
+			So it consist of lines which state which command should executed on which machine.
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Basic Syntax</title>
+
+		<para>
+			All lines follows the following syntax:
+		</para>
+
+		<variablelist>
+			<varlistentry>
+				<term>
+					<option>machine: command</option>
+				</term>
+
+				<listitem>
+					<para>
+						The machine name is the first part of the line followed by an ':'.
+						After the ':' follows the command which should be executed.
+					</para>
+
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Extended Syntax</title>
+
+		<para>
+			The following syntax examples shows how you could solve common problems.
+		</para>
+
+		<variablelist>
+			<varlistentry>
+				<term>
+					<option>machine !: command</option>
+				</term>
+
+				<listitem>
+					<para>
+						The '!' is similar to the 'not' in python. So this line will fail if the command succeds
+						and succeds if the command fails. Between the machine name and the '!' must be a space.
+					</para>
+
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>
+					<option>all: command</option>
+				</term>
+
+				<listitem>
+					<para>
+						This command is executed on all machines of this test.
+					</para>
+
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<option>machine1,machine2: command</option>
+				</term>
+
+				<listitem>
+					<para>
+						This command is on all machines of the comma seperated list. So on machine1 and on machine2.
+					</para>
+
+				</listitem>
+			</varlistentry>
+
+						<varlistentry>
+				<term>
+					<option>include: ../test2</option>
+				</term>
+
+				<listitem>
+					<para>
+						This will include the recipe of test2.
+						The path is relativ to the directory of the recipe file which contain the include statement.
+					</para>
+
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Example</title>
+
+		<example>
+
+			<simplelist>
+				<member>alice: echo "Hello World"</member>
+				<member>bob !: eecho "Hello World"</member>
+				<member>alice: ls -l</member>
+				<member>all: blkid</member>
+				<member>alice,bob: echo "This is a comma seperated list"</member>
+				<member>include: ../test2</member>
+			</simplelist>
+		</example>
+
+	</refsect1>
+
+	<refsect1>
+		<title>Bugs</title>
+
+		<para>
+			Please report all bugs to the official bugtracker at
+			http://bugzilla.ipfire.org/.
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See Also</title>
+
+		<para>
+			<citerefentry>
+				<refentrytitle>nitsi</refentrytitle>
+				<manvolnum>1</manvolnum>
+			</citerefentry>
+		</para>
+	</refsect1>
+</refentry>
