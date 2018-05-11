@@ -26,6 +26,9 @@ bin_SCRIPTS = \
 CLEANFILES += \
 	nitsi
 
+EXTRA_DIST += \
+	nitsi.in
+
 nitsi_PYTHON = \
 	src/nitsi/__init__.py \
 	src/nitsi/disk.py \
