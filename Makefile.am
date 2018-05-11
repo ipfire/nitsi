@@ -16,7 +16,6 @@ EXTRA_DIST =
 INSTALL_DIRS =
 noinst_DATA =
 
-
 AM_V_XSLT   = $(AM_V_XSLT_$(V))
 AM_V_XSLT_  = $(AM_V_XSLT_$(AM_DEFAULT_VERBOSITY))
 AM_V_XSLT_0 = @echo "  XSLT    " $@;
@@ -37,7 +36,6 @@ nitsi_PYTHON = \
 	src/nitsi/serial_connection.py \
 	src/nitsi/test.py \
 	src/nitsi/virtual_environ.py
-
 
 nitsidir = $(pythondir)/nitsi
 
@@ -92,7 +90,6 @@ man/%.5: man/%.xml
 
 man/%.html: man/%.xml man/custom-html.xsl
 	$(XSLTPROC_COMMAND_HTML)
-
 endif
 
 # ------------------------------------------------------------------------------
