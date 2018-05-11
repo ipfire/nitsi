@@ -1,0 +1,2 @@
+alice: echo "This is test3 on alice"
+all: echo "This is test3 on all"

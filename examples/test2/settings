@@ -1,0 +1,9 @@
+[DEFAULT]
+Name = Hello World
+Description = This is a
+    short description.
+
+[VIRTUAL_ENVIRONMENT]
+Name = basic
+path = ../virtual-environment/basic
+

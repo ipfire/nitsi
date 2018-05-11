@@ -1,0 +1,6 @@
+alice: echo "Hello World"
+bob: echo "Hello World"
+alice: ls -l
+all: blkid
+alice,bob !: eecho "This is a comma seperated list"
+include: ../test2

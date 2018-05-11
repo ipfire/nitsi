@@ -1,0 +1,2 @@
+alice: echo "This is test2 on alice"
+include: ../test3
