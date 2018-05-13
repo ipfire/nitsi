@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     parser.add_argument("-d", "--directory", dest="dir")
 
-    parser.add_argument("-v" "--version", help="Display version and exit",
+    parser.add_argument("-v", "--version", help="Display version and exit",
                     action="store_true", dest="version")
 
     args = parser.parse_args()
