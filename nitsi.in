@@ -4,6 +4,10 @@ from nitsi.test import test
 from nitsi.logger import init_logging
 import logging
 
+from nitsi.recipe import RecipeExeption
+
+from nitsi.test import TestException
+
 logger = logging.getLogger("nitsi")
 logger.setLevel(logging.DEBUG)
 # create console handler with a higher log level
@@ -36,15 +40,25 @@ if __name__ == "__main__":
         fh.setLevel(logging.DEBUG)
         logger.addHandler(fh)
         logger.debug("We now logging everything to {}/general.log".format(log_dir))
+        try:
+            currenttest = test(args.dir, log_dir)
+            currenttest.read_settings()
+            currenttest.virtual_environ_setup()
+            currenttest.load_recipe()
+        except RecipeExeption as e:
+            logger.exception(e)
+            exit(2)
 
-        currenttest = test(args.dir, log_dir)
-        currenttest.read_settings()
-        currenttest.virtual_environ_setup()
-        currenttest.load_recipe()
         try:
             currenttest.virtual_environ_start()
             currenttest.run_recipe()
+        except TestException as e:
+            logger.exception(e)
+            exit(1)
         except BaseException as e:
-            print(e)
+            logger.exception(e)
+            exit(3)
         finally:
             currenttest.virtual_environ_stop()
+
+        exit(0)

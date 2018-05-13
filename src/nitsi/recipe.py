@@ -9,7 +9,8 @@ logger = logging.getLogger("nitsi.recipe")
 
 
 class RecipeExeption(Exception):
-    pass
+    def __init__(self, message):
+        self.message = message
 
 
 
@@ -39,13 +40,14 @@ class recipe():
 
         if not os.path.isfile(self.recipe_file):
             self.log.error("{} is not a file".format(self.recipe_file))
-            raise RecipeExeption
+            raise RecipeExeption("{} is not a file".format(self.recipe_file)())
 
         try:
             with open(self.recipe_file) as fobj:
                 self.raw_recipe = fobj.readlines()
         except FileNotFoundError as error:
             self.log.error("No such file: {}".format(vm_xml_file))
+            raise error
 
     @property
     def recipe(self):
@@ -71,16 +73,16 @@ class recipe():
             raw_line = line.split(":", 1)
             if len(raw_line) < 2:
                 self.log.error("Error parsing the recipe in line {}".format(i))
-                raise RecipeExeption
+                raise RecipeExeption("Error parsing the recipe in line {}".format(i))
             cmd = raw_line[1].strip()
             raw_line = raw_line[0].strip().split(" ")
             if len(raw_line) == 0:
                 self.log.error("Failed to parse the recipe in line {}".format(i))
-                raise RecipeExeption
+                raise RecipeExeption("Failed to parse the recipe in line {}".format(i))
 
             if raw_line[0].strip() == "":
                     self.log.error("Failed to parse the recipe in line {}".format(i))
-                    raise RecipeExeption
+                    raise RecipeExeption("Failed to parse the recipe in line {}".format(i))
 
             machine = raw_line[0].strip()
 
@@ -96,7 +98,7 @@ class recipe():
                 path = path + "/recipe"
                 if path in self.circle:
                     self.log.error("Detect import loop!")
-                    raise RecipeExeption
+                    raise RecipeExeption("Detect import loop!")
                 self.circle.append(path)
                 recipe_to_include = recipe(path, circle=self.circle)
 

@@ -16,6 +16,11 @@ import logging
 
 logger = logging.getLogger("nitsi.test")
 
+
+class TestException(Exception):
+    def __init__(self, message):
+        self.message = message
+
 class test():
     def __init__(self, path, log_path):
         try:
@@ -105,11 +110,9 @@ class test():
             return_value = self.virtual_machines[line[0]].cmd(line[2])
             self.log.debug("Return value is: {}".format(return_value))
             if return_value != "0" and line[1] == "":
-                self.log.error("Failed to execute command '{}' on {}, return code: {}".format(line[2],line[0], return_value))
-                return False
+                raise TestException("Failed to execute command '{}' on {}, return code: {}".format(line[2],line[0], return_value))
             elif return_value == "0" and line[1] == "!":
-                self.log.error("Succeded to execute command '{}' on {}, return code: {}".format(line[2],line[0],return_value))
-                return False
+                raise TestException("Succeded to execute command '{}' on {}, return code: {}".format(line[2],line[0],return_value))
             else:
                 self.log.debug("Command '{}' on {} returned with: {}".format(line[2],line[0],return_value))
 
