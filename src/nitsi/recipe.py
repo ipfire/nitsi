@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
-import os
-
 import logging
+import os
 
 logger = logging.getLogger("nitsi.recipe")
 

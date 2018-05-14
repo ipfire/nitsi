@@ -1,12 +1,10 @@
 #!/usr/bin/python3
 
 import guestfs
-
-import tempfile
-import tarfile
-import os
-
 import logging
+import os
+import tarfile
+import tempfile
 
 logger = logging.getLogger("nitsi.disk")
 

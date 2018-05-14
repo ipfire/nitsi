@@ -1,14 +1,13 @@
 #!/usr/bin/python3
-import serial
 
-import re
-import os
-
-from time import sleep
-import sys
 import logging
+import os
+import re
+import serial
+import sys
+import time
 
-from nitsi.logger import TestFormatter
+from .logger import TestFormatter
 
 logger = logging.getLogger("nitsi.serial")
 

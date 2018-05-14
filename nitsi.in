@@ -1,13 +1,11 @@
 #!/usr/bin/python3
 
-from nitsi.test import test
-from nitsi.logger import init_logging
-import logging
 import argparse
+import logging
 
+from nitsi.logger import init_logging
 from nitsi.recipe import RecipeExeption
-
-from nitsi.test import TestException
+from nitsi.test import TestException, test
 
 logger = logging.getLogger("nitsi")
 logger.setLevel(logging.DEBUG)

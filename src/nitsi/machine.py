@@ -1,15 +1,12 @@
 #!/usr/bin/python3
 
+import libvirt
+import logging
+import os
 import xml.etree.ElementTree as ET
 
-from nitsi.disk import disk
-
-from nitsi.serial_connection import serial_connection
-
-import os
-import libvirt
-
-import logging
+from .disk import disk
+from .serial_connection import serial_connection
 
 logger = logging.getLogger("nitsi.machine")
 

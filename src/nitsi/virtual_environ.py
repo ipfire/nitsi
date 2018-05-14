@@ -1,13 +1,12 @@
 #!/usr/bin/python3
 
-from nitsi.machine import machine
-
-from nitsi.network import network
-
-import os
 import configparser
 import libvirt
 import logging
+import os
+
+from .machine import machine
+from .network import network
 
 logger = logging.getLogger("nitsi.virtual_environ")
 

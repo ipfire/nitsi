@@ -1,18 +1,13 @@
 #!/usr/bin/python3
 
-
-import libvirt
-
-import os
-
 import configparser
-
+import libvirt
+import logging
+import os
 import time
 
-from nitsi.virtual_environ import virtual_environ
-from nitsi.recipe import recipe
-
-import logging
+from .recipe import recipe
+from .virtual_environ import virtual_environ
 
 logger = logging.getLogger("nitsi.test")
 
@@ -124,6 +119,3 @@ class test():
 
         for name in self.virtual_environ.network_names:
             self.virtual_networks[name].undefine()
-
-
-
