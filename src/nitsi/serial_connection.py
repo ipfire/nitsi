@@ -7,9 +7,9 @@ import serial
 import sys
 import time
 
-from .logger import TestFormatter
+from . import logger
 
-logger = logging.getLogger("nitsi.serial")
+log = logging.getLogger("nitsi.serial")
 
 class serial_connection():
     def __init__(self, device, username=None, log_file=None, name=None, log_start_time=None, longest_machine_name=10):
@@ -18,7 +18,7 @@ class serial_connection():
         self.username = username
         self.name = name
         self.log_file = log_file
-        self.log = logger.getChild(name)
+        self.log = log.getChild(name)
         self.log.setLevel(logging.INFO)
         self.con = serial.Serial(device)
 
@@ -26,7 +26,7 @@ class serial_connection():
         log_file_handler = logging.FileHandler(self.log_file)
         log_file_handler.setLevel(logging.INFO)
         log_file_handler.terminator = ""
-        formatter = TestFormatter(name=self.name,
+        formatter = logger.TestFormatter(name=self.name,
                                     start_time=log_start_time,
                                     longest_machine_name=longest_machine_name)
         log_file_handler.setFormatter(formatter)
@@ -99,11 +99,11 @@ class serial_connection():
     @property
     def in_waiting(self):
         in_waiting_before = 0
-        sleep(0.5)
+        time.sleep(0.5)
 
         while in_waiting_before != self.con.in_waiting:
             in_waiting_before = self.con.in_waiting
-            sleep(0.5)
+            time.sleep(0.5)
 
         return self.con.in_waiting
 

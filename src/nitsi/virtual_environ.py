@@ -5,8 +5,8 @@ import libvirt
 import logging
 import os
 
-from .machine import machine
-from .network import network
+from . import machine
+from . import network
 
 logger = logging.getLogger("nitsi.virtual_environ")
 
@@ -60,14 +60,14 @@ class virtual_environ():
         networks = {}
         for _network in self.networks:
             self.log.debug(_network)
-            networks.setdefault(_network, network(self.con, os.path.normpath(self.path + "/" + self.config[_network]["xml_file"])))
+            networks.setdefault(_network, network.network(self.con, os.path.normpath(self.path + "/" + self.config[_network]["xml_file"])))
         return networks
 
     def get_machines(self):
         machines = {}
         for _machine in self.machines:
             self.log.debug(_machine)
-            machines.setdefault(_machine, machine(
+            machines.setdefault(_machine, machine.machine(
                 self.con,
                 os.path.normpath(self.path + "/" + self.config[_machine]["xml_file"]),
                 os.path.normpath(self.path + "/" + self.config[_machine]["snapshot_xml_file"]),

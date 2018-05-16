@@ -6,8 +6,8 @@ import logging
 import os
 import time
 
-from .recipe import recipe
-from .virtual_environ import virtual_environ
+from . import recipe
+from . import virtual_environ
 
 logger = logging.getLogger("nitsi.test")
 
@@ -58,7 +58,7 @@ class test():
         self.virtual_environ_path = os.path.normpath(self.path + "/" + self.virtual_environ_path)
 
     def virtual_environ_setup(self):
-        self.virtual_environ = virtual_environ(self.virtual_environ_path)
+        self.virtual_environ = virtual_environ.virtual_environ(self.virtual_environ_path)
 
         self.virtual_networks = self.virtual_environ.get_networks()
 
@@ -91,7 +91,7 @@ class test():
     def load_recipe(self):
         self.log.info("Going to load the recipe")
         try:
-            self.recipe = recipe(self.recipe_file)
+            self.recipe = recipe.recipe(self.recipe_file)
             for line in self.recipe.recipe:
                 self.log.debug(line)
 
