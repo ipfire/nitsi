@@ -14,7 +14,7 @@ class network():
             with open(network_xml_file) as fobj:
                 self.network_xml = fobj.read()
         except FileNotFoundError as error:
-            self.log.error("No such file: {}".format(vm_xml_file))
+            self.log.error("No such file: {}".format(network_xml_file))
 
     def define(self):
         self.network = self.con.networkDefineXML(self.network_xml)
