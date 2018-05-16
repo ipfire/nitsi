@@ -39,13 +39,13 @@ class recipe():
 
         if not os.path.isfile(self.recipe_file):
             self.log.error("{} is not a file".format(self.recipe_file))
-            raise RecipeExeption("{} is not a file".format(self.recipe_file)())
+            raise RecipeExeption("{} is not a file".format(self.recipe_file))
 
         try:
             with open(self.recipe_file) as fobj:
                 self.raw_recipe = fobj.readlines()
         except FileNotFoundError as error:
-            self.log.error("No such file: {}".format(vm_xml_file))
+            self.log.error("No such file: {}".format(self.recipe_file))
             raise error
 
     @property
