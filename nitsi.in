@@ -49,7 +49,7 @@ def main():
         currenttest.load_recipe()
     except RecipeExeption as e:
         logger.exception(e)
-        exit(2)
+        return 2
 
     try:
         currenttest.virtual_environ_start()
@@ -66,4 +66,6 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    main()
+   return_value = main()
+   logger.debug("Return value of main is: {}".format(return_value))
+   exit(return_value)
