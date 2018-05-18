@@ -33,7 +33,7 @@
 
 		<para>
 			The <filename>recipe</filename> file contains the actions for a test.
-			So it consist of lines which state which command should executed on which machine.
+			It consists of lines which state what commands should be executed on which machine.
 		</para>
 	</refsect1>
 
@@ -41,7 +41,7 @@
 		<title>Basic Syntax</title>
 
 		<para>
-			All lines follows the following syntax:
+			All lines follow the following syntax:
 		</para>
 
 		<variablelist>
@@ -52,10 +52,9 @@
 
 				<listitem>
 					<para>
-						The machine name is the first part of the line followed by an ':'.
+						The machine name is the first part of the line followed by ':'.
 						After the ':' follows the command which should be executed.
 					</para>
-
 				</listitem>
 			</varlistentry>
 		</variablelist>
@@ -76,10 +75,9 @@
 
 				<listitem>
 					<para>
-						The '!' is similar to the 'not' in python. So this line will fail if the command succeds
-						and succeds if the command fails. Between the machine name and the '!' must be a space.
+						The '!' is similar to the 'not' in python. So this line will fail if the command succeeds
+						and succeeds if the command fails. Between the machine name and the '!' must be a space.
 					</para>
-
 				</listitem>
 			</varlistentry>
 
@@ -92,7 +90,6 @@
 					<para>
 						This command is executed on all machines of this test.
 					</para>
-
 				</listitem>
 			</varlistentry>
 			<varlistentry>
@@ -102,13 +99,12 @@
 
 				<listitem>
 					<para>
-						This command is on all machines of the comma seperated list. So on machine1 and on machine2.
+						This command is on all machines of the comma seperated list.
 					</para>
-
 				</listitem>
 			</varlistentry>
 
-						<varlistentry>
+			<varlistentry>
 				<term>
 					<option>include: ../test2</option>
 				</term>
@@ -116,12 +112,11 @@
 				<listitem>
 					<para>
 						This will include the recipe of test2.
-						The path is relativ to the directory of the recipe file which contain the include statement.
+						The path is relative to the directory of the
+						recipe file which contains the include statement.
 					</para>
-
 				</listitem>
 			</varlistentry>
-
 		</variablelist>
 	</refsect1>
 
@@ -139,7 +134,6 @@
 				<member>include: ../test2</member>
 			</simplelist>
 		</example>
-
 	</refsect1>
 
 	<refsect1>
