@@ -50,8 +50,8 @@ man: $(MANPAGES) $(MANPAGES_HTML)
 if ENABLE_MANPAGES
 MANPAGES = \
 	man/nitsi.1 \
-	man/nitsi.settings.1 \
-	man/nitsi.recipe.1
+	man/nitsi.settings.5 \
+	man/nitsi.recipe.5
 
 MANPAGES_XML  = $(patsubst %.1,%.xml,$(patsubst %.5,%.xml,$(MANPAGES)))
 MANPAGES_HTML = $(patsubst %.xml,%.html,$(MANPAGES_XML))
