@@ -3,6 +3,7 @@
 /libtool
 /man/*.[0-9]
 /man/*.html
+/nitsi
 /tmp
 *.py[co]
 /*.tar.bz2
