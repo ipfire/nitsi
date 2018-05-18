@@ -24,7 +24,7 @@
 
 	<refnamediv>
 		<refname>nitsi.settings</refname>
-		<refpurpose>Settings file for a nitsi test</refpurpose>
+		<refpurpose>Settings file for a NITSI test</refpurpose>
 	</refnamediv>
 
 
@@ -32,16 +32,16 @@
 		<title>Description</title>
 
 		<para>
-			The <filename>settings</filename> file is the main configuration file of the
-			<command>nitsi</command> test.
-			This file specifies runtime configuration parameters for the test
-			and set the virtual environment to use.
+			The <filename>settings</filename> file is the main configuration file
+			of a <command>nitsi</command> test.
+			It specifies runtime configuration parameters for the test
+			and defines the virtual environment to be used.
 		</para>
 
 		<para>
 			The syntax of the configuration file is based on the INI configuration
-			file format. Lines starting with hash (#) or semi-colon (;)
-			are ignored.
+			file format.
+			Lines starting with hash (#) or semi-colon (;) are comments.
 		</para>
 	</refsect1>
 
@@ -55,57 +55,54 @@
 		<variablelist>
 			<varlistentry>
 				<term>
-					<option>Name = ""</option>
+					<option>Name</option>
 				</term>
 
 				<listitem>
 					<para>
 						This option will configure the name of the test
-						and can be something more human readbale then the name of the test directory.
+						and should be in human-readable format.
 					</para>
-
 				</listitem>
 			</varlistentry>
 
 			<varlistentry>
 				<term>
-					<option>Description = ""</option>
+					<option>Description</option>
 				</term>
 
 				<listitem>
 					<para>
-						This can be a short description of the test to explain
-						what we are trying to test and what results we expect when
-						we are running the recipe. So when do the test succeed and when do the test fails.
+						A short short description of the test to explain
+						what it is trying to test and what results are expected when
+						running the recipe.
 					</para>
-
 				</listitem>
 			</varlistentry>
 
 			<varlistentry>
 				<term>
-					<option>Copy_from = ""</option>
+					<option>Copy_from</option>
 				</term>
 
 				<listitem>
 					<para>
-						The files or directories which should be copied into all virtual machines.
-						The paths are relativ to the path of the test directory.
+						Lists files or directories which should be copied into
+						all virtual machines.
+						The paths are relative to the path of the test directory.
 					</para>
-
 				</listitem>
 			</varlistentry>
 
 			<varlistentry>
 				<term>
-					<option>Copy_to = ""</option>
+					<option>Copy_to</option>
 				</term>
 
 				<listitem>
 					<para>
-						The path to which the files should be copied. For example /root/
+						The path to which the files should be copied. For example /root.
 					</para>
-
 				</listitem>
 			</varlistentry>
 
@@ -122,27 +119,26 @@
 		<variablelist>
 			<varlistentry>
 				<term>
-					<option>Name = ""</option>
+					<option>Name</option>
 				</term>
 
 				<listitem>
 					<para>
-						The Name of the virtual environment to use.
+						The name of the virtual environment to use.
 					</para>
-
 				</listitem>
 			</varlistentry>
 
-					<varlistentry>
+			<varlistentry>
 				<term>
-					<option>path = ""</option>
+					<option>path</option>
 				</term>
 
 				<listitem>
 					<para>
-						The path of the virtual environment relativ to the path of the test.
+						The path of the virtual environment relative to
+						the path of the test directory.
 					</para>
-
 				</listitem>
 			</varlistentry>
 		</variablelist>
@@ -156,8 +152,7 @@
 			<simplelist>
 				<member>[DEFAULT]</member>
 				<member>Name = Hello World</member>
-				<member>Description = This is a
-    				short description.</member>
+				<member>Description = This is a short description.</member>
 				<member>Copy_from =</member>
 				<member>Copy_to = /root/</member>
 				<member>[VIRTUAL_ENVIRONMENT]</member>
@@ -165,7 +160,6 @@
 				<member>path = ../virtual-environment/basic</member>
 			</simplelist>
 		</example>
-
 	</refsect1>
 
 	<refsect1>
