@@ -1,6 +1,8 @@
 /Makefile
 /build-aux
 /libtool
+/man/*.[0-9]
+/man/*.html
 /tmp
 *.py[co]
 /*.tar.bz2
