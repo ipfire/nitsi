@@ -39,8 +39,9 @@
 		<title>Description</title>
 
 		<para>
-			<command>nitsi</command> is a simple, extensible, Integration Test Suite
-				for the Network code of IPfire written in Python.
+			<command>nitsi</command> is a simple and extensible
+			suite for running integration tests for the network
+			code of IPFire. It is written in pure Python.
 		</para>
 	</refsect1>
 
@@ -62,21 +63,23 @@
 
 				<listitem>
 					<para>
-						Is the directory where all files of a test are located.
-						So this dir should contain at least a setting file and a recipe file
+						The directory where all files of a test are located.
+						It should contain at least a setting file and a recipe file.
 					</para>
 
 					<para>
-						For further details of the setting file layout and the recipe file layout, please consult the
+						For further details of the setting file layout and the recipe file layout,
+						please consult the
 						<citerefentry>
-							<refentrytitle>nitsi.setting</refentrytitle>
+							<refentrytitle>nitsi.settings</refentrytitle>
 							<manvolnum>5</manvolnum>
 						</citerefentry>
+						and
 						<citerefentry>
 							<refentrytitle>nitsi.recipe</refentrytitle>
 							<manvolnum>5</manvolnum>
 						</citerefentry>
-						manual page.
+						manual pages.
 					</para>
 				</listitem>
 			</varlistentry>
@@ -103,7 +106,7 @@
 
 		<para>
 			Please report all bugs to the official bugtracker at
-			http://bugzilla.ipfire.org/.
+			https://bugzilla.ipfire.org/.
 		</para>
 	</refsect1>
 
@@ -112,7 +115,7 @@
 
 		<para>
 			<citerefentry>
-				<refentrytitle>nitsi.setting</refentrytitle>
+				<refentrytitle>nitsi.settings</refentrytitle>
 				<manvolnum>5</manvolnum>
 			</citerefentry>
 			<citerefentry>
