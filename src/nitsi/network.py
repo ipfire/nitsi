@@ -8,7 +8,7 @@ logger = logging.getLogger("nitsi.network")
 # # A class which define and undefine a virtual network based on an xml file
 class network():
     def __init__(self, libvirt_con, network_xml_file):
-        self.log = logger.getChild(os.path.basename(network_xml_file))
+        self.log = logger.getChild(os.path.basename(os.path.dirname(network_xml_file)))
         self.con = libvirt_con
         try:
             with open(network_xml_file) as fobj:
