@@ -19,6 +19,7 @@ class virtual_environ():
             self.path = os.path.abspath(path)
         except BaseException as e:
             self.log.error("Could not get absolute path")
+            raise e
 
         self.log.debug(self.path)
 
@@ -53,6 +54,7 @@ class virtual_environ():
             self.con = libvirt.open(self.uri)
         except BaseException as error:
             self.log.error("Could not connect to: {}".format(self.uri))
+            raise error
 
         self.log.debug("Connected to: {}".format(self.uri))
 

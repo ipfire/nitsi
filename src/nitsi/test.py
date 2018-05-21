@@ -23,6 +23,7 @@ class test():
             self.log = logger.getChild(os.path.basename(self.path))
         except BaseException as e:
             logger.error("Could not get absolute path")
+            raise e
 
         self.log.debug("Path of this test is: {}".format(self.path))
 
