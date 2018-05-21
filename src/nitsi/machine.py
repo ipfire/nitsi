@@ -14,6 +14,12 @@ class machine():
     def __init__(self, libvirt_con, vm_xml_file, snapshot_xml_file, image, root_uid, username, password):
         self.log = logger.getChild(os.path.basename(vm_xml_file))
         self.con = libvirt_con
+        # self.dom should be always defined
+        self.dom = None
+        # self.snapshot should be also at least None
+        self.snapshot = None
+
+
         try:
             with open(vm_xml_file) as fobj:
                 self.vm_xml = fobj.read()
@@ -47,40 +53,56 @@ class machine():
         self.password = password
 
     def define(self):
+        self.log.info("Defining virtual machine")
         self.dom = self.con.defineXML(self.vm_xml)
         if self.dom == None:
             self.log.error("Could not define VM")
             raise BaseException
 
     def start(self):
+        self.log.info("Starting virtual machine")
         if self.dom.create() < 0:
             self.log.error("Could not start VM")
             raise BaseException
 
     def shutdown(self):
         if self.is_running():
+            self.log.info("Shutting down virtual machine")
             if self.dom.shutdown() < 0:
                 self.log.error("Could not shutdown VM")
                 raise BaseException
         else:
-            self.log.error("Domain is not running")
+            self.log.warn("Cannot shutdown a not running domain")
 
     def undefine(self):
-        self.dom.undefine()
+        # We cannot undefine a not defined dom object
+        if self.dom != None:
+            self.log.info("Undefining virtual machine")
+            self.dom.undefine()
+        else:
+            self.log.warn("Cannot undefine a not defined domain")
 
     def create_snapshot(self):
-
+        self.log.info("Creating snapshot of virtual machine")
         self.snapshot = self.dom.snapshotCreateXML(self.snapshot_xml)
 
-        if not self.snapshot:
+        if self.snapshot == None:
             self.log.error("Could not create snapshot")
             raise BaseException
 
     def revert_snapshot(self):
-        self.dom.revertToSnapshot(self.snapshot)
-        self.snapshot.delete()
+        if self.snapshot != None:
+            self.log.info("Reverting snapshot")
+            self.dom.revertToSnapshot(self.snapshot)
+            self.log.info("Deleting snapshot")
+            self.snapshot.delete()
+        else:
+            self.log.warn("No active snapshot. Cannot revert and delete snapshot")
 
     def is_running(self):
+        # Only if we have a valid dom object we can check the dom state
+        if self.dom == None:
+            return False
 
         state, reason = self.dom.state()
 
