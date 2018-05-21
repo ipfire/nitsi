@@ -114,9 +114,18 @@ class test():
 
     def virtual_environ_stop(self):
         for name in self.virtual_environ.machine_names:
-            self.virtual_machines[name].shutdown()
-            self.virtual_machines[name].revert_snapshot()
-            self.virtual_machines[name].undefine()
+            # We just catch exception here to avoid
+            # that we stop the cleanup process if only  one command fails
+            try:
+                self.virtual_machines[name].shutdown()
+                self.virtual_machines[name].revert_snapshot()
+                self.virtual_machines[name].undefine()
+            except BaseException as e:
+                self.log.exception(e)
 
         for name in self.virtual_environ.network_names:
-            self.virtual_networks[name].undefine()
+            try:
+                self.virtual_networks[name].undefine()
+            except BaseException as e:
+                 self.log.exception(e)
+
