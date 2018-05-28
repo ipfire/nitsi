@@ -23,14 +23,23 @@ class serial_connection():
         self.con = serial.Serial(device)
 
         self.log_output = self.log.getChild("output")
+        # Do not propagate the output to ancestor loggers as it looks ugly
+        self.log_output.propagate = False
+        # Logging handler for file
         log_file_handler = logging.FileHandler(self.log_file)
         log_file_handler.setLevel(logging.INFO)
         log_file_handler.terminator = ""
+        # Loggin Handler for Stream
+        stream_handler = logging.StreamHandler()
+        stream_handler.setLevel(logging.INFO)
+        stream_handler.terminator = ""
         formatter = logger.TestFormatter(name=self.name,
                                     start_time=log_start_time,
                                     longest_machine_name=longest_machine_name)
         log_file_handler.setFormatter(formatter)
+        stream_handler.setFormatter(formatter)
         self.log_output.addHandler(log_file_handler)
+        self.log_output.addHandler(stream_handler)
 
     def read(self, size=1):
         if len(self.buffer) >= size:
@@ -94,7 +103,7 @@ class serial_connection():
     def log_console_line(self, line):
         self.log.debug("Get in function log_console_line()")
         self.log_output.info(line)
-        sys.stdout.write(line)
+        #sys.stdout.write(line)
 
     @property
     def in_waiting(self):

@@ -3,7 +3,7 @@
 import argparse
 import logging
 
-from nitsi.logger import init_logging
+from nitsi.logger import init_logging, Log_Formatter
 from nitsi.recipe import RecipeExeption
 from nitsi.test import TestException, test
 
@@ -13,7 +13,7 @@ logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = Log_Formatter()
 ch.setFormatter(formatter)
 # add the handlers to the logger
 logger.addHandler(ch)

@@ -73,3 +73,21 @@ class TestFormatter(logging.Formatter):
         t = time.strftime("%H:%M:%S", ct)
         s = "{}.{:03d}".format(t, round(record.msecs,None))
         return s
+
+
+class Log_Formatter(logging.Formatter):
+    def __init__(self):
+        super().__init__(fmt="[%(asctime)s] [%(levelname)s] %(message)s")
+        logger.debug("Initiating Log_Formatter")
+
+    def format(self, record):
+        # We use 8 to align the levelname, because CRITICAL ist the longest name and has 8 chars
+        return "[{}][{:^}][{:^8}] {}".format(self.formatTime(record),
+                                                record.name,
+                                                record.levelname,
+                                                record.getMessage())
+
+    def formatTime(self, record, datefmt=None):
+        t = time.strftime("%H:%M:%S", time.gmtime(record.created))
+        s = "{}.{:03d}".format(t, round(record.msecs,None))
+        return s
