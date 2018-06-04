@@ -8,14 +8,12 @@ from nitsi.recipe import RecipeExeption
 from nitsi.test import TestException, test
 
 logger = logging.getLogger("nitsi")
-logger.setLevel(logging.DEBUG)
-# create console handler with a higher log level
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
 
+# create console handler
+ch = logging.StreamHandler()
 formatter = Log_Formatter()
 ch.setFormatter(formatter)
-# add the handlers to the logger
+# add the handler to the logger
 logger.addHandler(ch)
 
 def main():
@@ -23,21 +21,35 @@ def main():
 
     parser.add_argument("-d", "--directory", dest="dir")
 
+    parser.add_argument( "--log-level", choices=[ "debug", "error", "info", "warning" ], dest="log_level", default="info")
+
     parser.add_argument("-v", "--version", help="Display version and exit",
                     action="store_true", dest="version")
 
     args = parser.parse_args()
 
-    # We just log the version and exit
+  # We just log the version and exit
     if args.version:
         logger.info("nitsi version: {}".format("@PACKAGE_VERSION@"))
         return 0
+
+
+    # Set the log level
+    # We are doing this after we logged the version
+    # to avoid that the version is not shown because of the log level
+    if args.log_level == "info":
+        logger.setLevel(logging.INFO)
+    elif args.log_level == "debug":
+        logger.setLevel(logging.DEBUG)
+    elif args.log_level == "warning":
+        logger.setLevel(logging.WARNING)
+    elif args.log_level == "error":
+        logger.setLevel(logging.ERROR)
 
     # For all other stuff we need logging to a file
     log_dir = init_logging(args.dir)
     # We now going to log everything to log_dir/genaral.log
     fh = logging.FileHandler("{}/general.log".format(log_dir))
-    fh.setLevel(logging.DEBUG)
     logger.addHandler(fh)
     logger.debug("We now logging everything to {}/general.log".format(log_dir))
 
