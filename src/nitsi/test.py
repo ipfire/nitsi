@@ -82,9 +82,9 @@ class test():
         # Number of chars of the longest machine name
         longest_machine_name = self.virtual_environ.longest_machine_name
 
-        self.log.debug("Try to login on all machines")
+        self.log.info("Try to login on all machines")
         for name in self.virtual_environ.machine_names:
-            self.log.debug("Try to login on {}".format(name))
+            self.log.info("Try to login on {}".format(name))
             self.virtual_machines[name].login("{}/test.log".format(self.log_path),
                                                 log_start_time=log_start_time,
                                                 longest_machine_name=longest_machine_name)
