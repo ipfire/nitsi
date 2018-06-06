@@ -49,8 +49,19 @@ class test():
         tmp = []
         for file in self.copy_from:
             file = file.strip()
-            file = os.path.normpath(self.path + "/" + file)
-            tmp.append(file)
+            # If file is empty we do not want to add it to the list
+            if not file == "":
+                # If we get an absolut path we do nothing
+                # If not we add self.path to get an absolut path
+                if not os.path.isabs(file):
+                    file = os.path.normpath(self.path + "/" + file)
+
+                # We need to check if file is a valid file or dir
+                if not (os.path.isdir(file) or os.path.isfile(file)):
+                    raise TestException("'{}' is not a valid file nor a valid directory".format(file))
+
+                self.log.debug("'{}' will be copied into all images".format(file))
+                tmp.append(file)
 
         self.copy_from = tmp
 
