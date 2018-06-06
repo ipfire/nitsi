@@ -103,7 +103,7 @@ class test():
     def load_recipe(self):
         self.log.info("Going to load the recipe")
         try:
-            self.recipe = recipe.recipe(self.recipe_file)
+            self.recipe = recipe.recipe(self.recipe_file, machines=self.virtual_environ.machine_names)
             for line in self.recipe.recipe:
                 self.log.debug(line)
 

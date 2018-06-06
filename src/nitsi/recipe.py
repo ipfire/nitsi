@@ -16,7 +16,7 @@ class RecipeExeption(Exception):
 # Should read the test, check if the syntax are valid
 # and return tuples with the ( host, command ) structure
 class recipe():
-    def __init__(self, path, circle=[]):
+    def __init__(self, path, circle=[], machines=[]):
         self.recipe_file = path
         try:
             self.path = os.path.dirname(self.recipe_file)
@@ -28,7 +28,9 @@ class recipe():
         self.log = logger.getChild(self.name)
         self.log.debug("Path of recipe is: {}".format(self.recipe_file))
         self._recipe = None
-        self._machines = None
+        self._machines = machines
+
+        self.log.debug("Machine names we use when we substitute the all statement: {}".format(self._machines))
 
         self.in_recursion = True
         if len(circle) == 0:
@@ -57,12 +59,6 @@ class recipe():
 
     @property
     def machines(self):
-        if not self._machines:
-            self._machines = []
-            for line in self._recipe:
-                if line[0] != "all" and line[0] not in self._machines:
-                    self._machines.append(line[0])
-
         return self._machines
 
     def parse(self):
