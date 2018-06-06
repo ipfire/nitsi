@@ -69,6 +69,18 @@ class recipe():
         self._recipe = []
         i = 1
         for line in self.raw_recipe:
+            # Check if the line is empty
+            if line.strip() == "":
+                self.log.debug("Skipping empty line {}".format(i))
+                i = i + 1
+                continue
+
+            # Check if the line is a comment
+            if line.strip().startswith("#"):
+                self.log.debug("Skipping comment in line {}".format(i))
+                i = i + 1
+                continue
+
             raw_line = line.split(":", 1)
             if len(raw_line) < 2:
                 self.log.error("Error parsing the recipe in line {}".format(i))
