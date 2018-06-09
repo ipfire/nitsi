@@ -40,10 +40,10 @@ class test():
     def read_settings(self):
         self.config = configparser.ConfigParser()
         self.config.read(self.settings_file)
-        self.name = self.config["DEFAULT"]["Name"]
-        self.description = self.config["DEFAULT"]["Description"]
-        self.copy_to = self.config["DEFAULT"]["Copy_to"]
-        self.copy_from = self.config["DEFAULT"]["Copy_from"]
+        self.name = self.config["DEFAULT"]["name"]
+        self.description = self.config["DEFAULT"]["description"]
+        self.copy_to = self.config["DEFAULT"]["copy_to"]
+        self.copy_from = self.config["DEFAULT"]["copy_from"]
         self.copy_from = self.copy_from.split(",")
 
         tmp = []
@@ -65,8 +65,8 @@ class test():
 
         self.copy_from = tmp
 
-        self.virtual_environ_name = self.config["VIRTUAL_ENVIRONMENT"]["Name"]
-        self.virtual_environ_path = self.config["VIRTUAL_ENVIRONMENT"]["Path"]
+        self.virtual_environ_name = self.config["VIRTUAL_ENVIRONMENT"]["name"]
+        self.virtual_environ_path = self.config["VIRTUAL_ENVIRONMENT"]["path"]
         self.virtual_environ_path = os.path.normpath(self.path + "/" + self.virtual_environ_path)
 
     def virtual_environ_setup(self):
