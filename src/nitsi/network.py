@@ -23,7 +23,7 @@ class network():
         self.log.info("Going to define network")
         self.network = self.con.networkDefineXML(self.network_xml)
 
-        if network == None:
+        if self.network == None:
             self.log.error("Failed to define virtual network")
 
     def start(self):
