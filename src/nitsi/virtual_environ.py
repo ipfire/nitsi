@@ -12,7 +12,7 @@ logger = logging.getLogger("nitsi.virtual_environ")
 
 # Should return all vms and networks in a list
 # and should provide the path to the necessary xml files
-class virtual_environ():
+class Virtual_environ():
     def __init__(self, path):
         self.log = logger.getChild(os.path.basename(os.path.abspath(path)))
         try:
@@ -62,14 +62,14 @@ class virtual_environ():
         networks = {}
         for _network in self.networks:
             self.log.debug(_network)
-            networks.setdefault(_network, network.network(self.con, os.path.normpath(self.path + "/" + self.config[_network]["xml_file"])))
+            networks.setdefault(_network, network.Network(self.con, os.path.normpath(self.path + "/" + self.config[_network]["xml_file"])))
         return networks
 
     def get_machines(self):
         machines = {}
         for _machine in self.machines:
             self.log.debug(_machine)
-            machines.setdefault(_machine, machine.machine(
+            machines.setdefault(_machine, machine.Machine(
                 self.con,
                 os.path.normpath(self.path + "/" + self.config[_machine]["xml_file"]),
                 os.path.normpath(self.path + "/" + self.config[_machine]["snapshot_xml_file"]),

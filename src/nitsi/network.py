@@ -6,7 +6,7 @@ import os
 logger = logging.getLogger("nitsi.network")
 
 # # A class which define and undefine a virtual network based on an xml file
-class network():
+class Network():
     def __init__(self, libvirt_con, network_xml_file):
         self.log = logger.getChild(os.path.basename(os.path.dirname(network_xml_file)))
         self.con = libvirt_con

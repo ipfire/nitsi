@@ -10,7 +10,7 @@ from . import serial_connection
 
 logger = logging.getLogger("nitsi.machine")
 
-class machine():
+class Machine():
     def __init__(self, libvirt_con, vm_xml_file, snapshot_xml_file, image, root_uid, username, password):
         self.log = logger.getChild(os.path.basename(vm_xml_file))
         self.con = libvirt_con
@@ -47,7 +47,7 @@ class machine():
             self.log.error("No such file: {}".format(self.image))
 
         self.root_uid = root_uid
-        self.disk = disk.disk(image)
+        self.disk = disk.Disk(image)
 
         self.username = username
         self.password = password
@@ -128,7 +128,7 @@ class machine():
         return elem.text
 
     def check_is_booted_up(self):
-        serial_con = serial_connection.serial_connection(self.get_serial_device())
+        serial_con = serial_connection.Serial_connection(self.get_serial_device())
 
         serial_con.write("\n")
         # This will block till the domain is booted up
@@ -138,7 +138,7 @@ class machine():
 
     def login(self, log_file, log_start_time=None, longest_machine_name=10):
         try:
-            self.serial_con = serial_connection.serial_connection(self.get_serial_device(),
+            self.serial_con = serial_connection.Serial_connection(self.get_serial_device(),
                                 username=self.username,
                                 log_file=log_file,
                                 log_start_time=log_start_time,

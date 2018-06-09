@@ -9,7 +9,7 @@ import tempfile
 logger = logging.getLogger("nitsi.disk")
 
 
-class disk():
+class Disk():
     def __init__(self, disk):
         self.log = logger.getChild(os.path.basename(disk))
         self.log.debug("Initiated a disk class for {}".format(disk))

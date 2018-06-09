@@ -16,7 +16,7 @@ class TestException(Exception):
     def __init__(self, message):
         self.message = message
 
-class test():
+class Test():
     def __init__(self, path, log_path):
         try:
             self.path = os.path.abspath(path)
@@ -70,7 +70,7 @@ class test():
         self.virtual_environ_path = os.path.normpath(self.path + "/" + self.virtual_environ_path)
 
     def virtual_environ_setup(self):
-        self.virtual_environ = virtual_environ.virtual_environ(self.virtual_environ_path)
+        self.virtual_environ = virtual_environ.Virtual_environ(self.virtual_environ_path)
 
         self.virtual_networks = self.virtual_environ.get_networks()
 
@@ -103,7 +103,7 @@ class test():
     def load_recipe(self):
         self.log.info("Going to load the recipe")
         try:
-            self.recipe = recipe.recipe(self.recipe_file, machines=self.virtual_environ.machine_names)
+            self.recipe = recipe.Recipe(self.recipe_file, machines=self.virtual_environ.machine_names)
             for line in self.recipe.recipe:
                 self.log.debug(line)
 

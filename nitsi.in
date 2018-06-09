@@ -5,7 +5,7 @@ import logging
 
 from nitsi.logger import init_logging, Log_Formatter
 from nitsi.recipe import RecipeExeption
-from nitsi.test import TestException, test
+import nitsi.test
 
 logger = logging.getLogger("nitsi")
 
@@ -55,7 +55,7 @@ def main():
 
     # here we run a test
     try:
-        currenttest = test(args.dir, log_dir)
+        currenttest = nitsi.test.Test(args.dir, log_dir)
         currenttest.read_settings()
         currenttest.virtual_environ_setup()
         currenttest.load_recipe()
@@ -66,7 +66,7 @@ def main():
     try:
         currenttest.virtual_environ_start()
         currenttest.run_recipe()
-    except TestException as e:
+    except nitsi.test.TestException as e:
         logger.exception(e)
         return 1
     except BaseException as e:

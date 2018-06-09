@@ -15,7 +15,7 @@ class RecipeExeption(Exception):
 
 # Should read the test, check if the syntax are valid
 # and return tuples with the ( host, command ) structure
-class recipe():
+class Recipe():
     def __init__(self, path, circle=[], machines=[]):
         self.recipe_file = path
         try:
@@ -107,7 +107,7 @@ class recipe():
                     self.log.error("Detect import loop!")
                     raise RecipeExeption("Detect import loop!")
                 self.circle.append(path)
-                recipe_to_include = recipe(path, circle=self.circle)
+                recipe_to_include = Recipe(path, circle=self.circle)
 
             if machine == "include":
                 self._recipe.extend(recipe_to_include.recipe)
