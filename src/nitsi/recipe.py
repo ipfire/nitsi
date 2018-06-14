@@ -20,9 +20,10 @@ class Recipe():
         self.recipe_file = path
         try:
             self.path = os.path.dirname(self.recipe_file)
+            self.path = os.path.abspath(self.path)
             self.name = os.path.basename(self.path)
         except BaseException as e:
-            logger.error("Failed to get the name of the test to this recipe")
+            logger.error("Failed to get the path to this recipe")
             raise e
 
         self.log = logger.getChild(self.name)
@@ -102,7 +103,11 @@ class Recipe():
             if machine == "include":
                 path = cmd.strip()
                 path = os.path.normpath(self.path + "/" + path)
-                path = path + "/recipe"
+
+                # If we did not get a valid file we asume that we get a valid path to a test.
+                if os.path.isdir(path):
+                    path = path + "/recipe"
+
                 if path in self.circle:
                     self.log.error("Detect import loop!")
                     raise RecipeExeption("Detect import loop!")
