@@ -32,10 +32,12 @@ class Test():
         self.settings_file = "{}/settings".format(self.path)
         if not os.path.isfile(self.settings_file):
             self.log.error("No such file: {}".format(self.settings_file))
+            raise TestException("No settings file found")
 
         self.recipe_file = "{}/recipe".format(self.path)
         if not os.path.isfile(self.recipe_file):
             self.log.error("No such file: {}".format(self.recipe_file))
+            raise TestException("No recipe file found")
 
     def read_settings(self):
         self.config = configparser.ConfigParser()
