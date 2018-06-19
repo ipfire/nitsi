@@ -40,6 +40,7 @@ class Test():
             raise TestException("No recipe file found")
 
     def read_settings(self):
+        self.log.debug("Going to read all settings from the ini file")
         try:
             self.config = configparser.ConfigParser()
             self.config.read(self.settings_file)
@@ -47,34 +48,41 @@ class Test():
             self.log.error("Failed to parse the config")
             raise e
 
-        self.name = self.config["GENERAL"]["name"]
-        self.description = self.config["GENERAL"]["description"]
-        self.copy_to = self.config["GENERAL"]["copy_to"]
-        self.copy_from = self.config["GENERAL"]["copy_from"]
-        self.virtual_environ_path = self.config["VIRTUAL_ENVIRONMENT"]["path"]
+        self.name = self.config.get("GENERAL","name", fallback="")
+        self.description = self.config.get("GENERAL", "description",  fallback="")
+        self.copy_to = self.config.get("GENERAL", "copy_to", fallback=None)
+        self.copy_from = self.config.get("GENERAL", "copy_from", fallback=None)
+        self.virtual_environ_path = self.config.get("VIRTUAL_ENVIRONMENT", "path", fallback=None)
+
+        if not self.virtual_environ_path:
+            self.log.error("No path for virtual environment found.")
+            raise TestException("No path for virtual environment found.")
+
         self.virtual_environ_path = os.path.normpath(self.path + "/" + self.virtual_environ_path)
 
         # Parse copy_from setting
-        self.copy_from = self.copy_from.split(",")
+        if self.copy_from:
+            self.log.debug("Going to parse the copy_from setting.")
+            self.copy_from = self.copy_from.split(",")
 
-        tmp = []
-        for file in self.copy_from:
-            file = file.strip()
-            # If file is empty we do not want to add it to the list
-            if not file == "":
-                # If we get an absolut path we do nothing
-                # If not we add self.path to get an absolut path
-                if not os.path.isabs(file):
-                    file = os.path.normpath(self.path + "/" + file)
+            tmp = []
+            for file in self.copy_from:
+                file = file.strip()
+                # If file is empty we do not want to add it to the list
+                if not file == "":
+                    # If we get an absolut path we do nothing
+                    # If not we add self.path to get an absolut path
+                    if not os.path.isabs(file):
+                        file = os.path.normpath(self.path + "/" + file)
 
-                # We need to check if file is a valid file or dir
-                if not (os.path.isdir(file) or os.path.isfile(file)):
-                    raise TestException("'{}' is not a valid file nor a valid directory".format(file))
+                    # We need to check if file is a valid file or dir
+                    if not (os.path.isdir(file) or os.path.isfile(file)):
+                        raise TestException("'{}' is not a valid file nor a valid directory".format(file))
 
-                self.log.debug("'{}' will be copied into all images".format(file))
-                tmp.append(file)
+                    self.log.debug("'{}' will be copied into all images".format(file))
+                    tmp.append(file)
 
-        self.copy_from = tmp
+            self.copy_from = tmp
 
 
 
@@ -93,7 +101,9 @@ class Test():
         for name in self.virtual_environ.machine_names:
             self.virtual_machines[name].define()
             self.virtual_machines[name].create_snapshot()
-            self.virtual_machines[name].copy_in(self.copy_from, self.copy_to)
+            # We can only copy files when we know which and to which dir
+            if self.copy_from and self.copy_to:
+                self.virtual_machines[name].copy_in(self.copy_from, self.copy_to)
             self.virtual_machines[name].start()
 
         # Time to which all serial output log entries are relativ
