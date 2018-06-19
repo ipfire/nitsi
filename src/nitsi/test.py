@@ -47,10 +47,10 @@ class Test():
             self.log.error("Failed to parse the config")
             raise e
 
-        self.name = self.config["DEFAULT"]["name"]
-        self.description = self.config["DEFAULT"]["description"]
-        self.copy_to = self.config["DEFAULT"]["copy_to"]
-        self.copy_from = self.config["DEFAULT"]["copy_from"]
+        self.name = self.config["GENERAL"]["name"]
+        self.description = self.config["GENERAL"]["description"]
+        self.copy_to = self.config["GENERAL"]["copy_to"]
+        self.copy_from = self.config["GENERAL"]["copy_from"]
         self.virtual_environ_path = self.config["VIRTUAL_ENVIRONMENT"]["path"]
         self.virtual_environ_path = os.path.normpath(self.path + "/" + self.virtual_environ_path)
 
