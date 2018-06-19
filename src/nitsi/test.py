@@ -40,8 +40,13 @@ class Test():
             raise TestException("No recipe file found")
 
     def read_settings(self):
-        self.config = configparser.ConfigParser()
-        self.config.read(self.settings_file)
+        try:
+            self.config = configparser.ConfigParser()
+            self.config.read(self.settings_file)
+        except BaseException as e:
+            self.log.error("Failed to parse the config")
+            raise e
+
         self.name = self.config["DEFAULT"]["name"]
         self.description = self.config["DEFAULT"]["description"]
         self.copy_to = self.config["DEFAULT"]["copy_to"]
