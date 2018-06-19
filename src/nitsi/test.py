@@ -46,7 +46,6 @@ class Test():
         self.description = self.config["DEFAULT"]["description"]
         self.copy_to = self.config["DEFAULT"]["copy_to"]
         self.copy_from = self.config["DEFAULT"]["copy_from"]
-        self.virtual_environ_name = self.config["VIRTUAL_ENVIRONMENT"]["name"]
         self.virtual_environ_path = self.config["VIRTUAL_ENVIRONMENT"]["path"]
         self.virtual_environ_path = os.path.normpath(self.path + "/" + self.virtual_environ_path)
 
