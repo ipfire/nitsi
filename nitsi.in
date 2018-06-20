@@ -55,7 +55,7 @@ def main():
 
     # here we run a test
     try:
-        currenttest = nitsi.test.Test(args.dir, log_dir)
+        currenttest = nitsi.test.Test(log_dir, dir=args.dir)
         currenttest.read_settings()
         currenttest.virtual_environ_setup()
         currenttest.load_recipe()

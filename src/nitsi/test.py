@@ -17,47 +17,81 @@ class TestException(Exception):
         self.message = message
 
 class Test():
-    def __init__(self, path, log_path, settings=None):
+    def __init__(self, log_path, dir=None, recipe_file=None, settings_file=None, cmd_settings=None):
         # init settings var
         self.settings = {}
 
-        try:
-            self.path = os.path.abspath(path)
-            self.log = logger.getChild(os.path.basename(self.path))
-        except BaseException as e:
-            logger.error("Could not get absolute path")
-            raise e
-
-        self.log.debug("Path of this test is: {}".format(self.path))
-
+        self.cmd_settings = cmd_settings
         self.log_path = log_path
 
-        self.settings_file = "{}/settings".format(self.path)
+        # Init all vars with None
+        self.settings_file = None
+        self.recipe_file = None
+        self.path = None
+
+        # We need at least a path to a recipe file or a dir to a test
+        if not dir and not recipe:
+            raise TestException("Did not get a path to a test or to a recipe file")
+
+        # We cannot decide which to use when we get both
+        if (dir and recipe_file) or (dir and settings_file):
+            raise TestException("Get dir and path to recipe or settings file")
+
+        if dir:
+            try:
+                if not os.path.isabs(dir):
+                    self.path = os.path.abspath(dir)
+            except BaseException as e:
+                logger.error("Could not get absolute path")
+                raise e
+
+            logger.debug("Path of this test is: {}".format(self.path))
+
+            self.recipe_file = "{}/recipe".format(self.path)
+            self.settings_file = "{}/settings".format(self.path)
+
+        if recipe_file:
+            if not os.path.isabs(recipe_file):
+                self.recipe_file = os.path.abspath(recipe_file)
+            else:
+                self.recipe_file = recipe_file
+
+        if settings_file:
+            if not os.path.isabs(settings_file):
+                self.settings_file = os.path.abspath(settings_file)
+            else:
+                self.settings_file = settings_file
+
         if not os.path.isfile(self.settings_file):
-            self.log.error("No such file: {}".format(self.settings_file))
+            logger.error("No such file: {}".format(self.settings_file))
             raise TestException("No settings file found")
 
-        self.recipe_file = "{}/recipe".format(self.path)
         if not os.path.isfile(self.recipe_file):
-            self.log.error("No such file: {}".format(self.recipe_file))
+            logger.error("No such file: {}".format(self.recipe_file))
             raise TestException("No recipe file found")
 
-        self.cmd_settings = settings
+        # Init logging
+        if dir:
+             self.log = logger.getChild(os.path.basename(self.path))
+
+        if recipe:
+            self.log = logger.getChild(os.path.basename(self.recipe_file))
 
     def read_settings(self):
-        self.log.debug("Going to read all settings from the ini file")
-        try:
-            self.config = configparser.ConfigParser()
-            self.config.read(self.settings_file)
-        except BaseException as e:
-            self.log.error("Failed to parse the config")
-            raise e
+        if self.settings_file:
+            self.log.debug("Going to read all settings from the ini file")
+            try:
+                self.config = configparser.ConfigParser()
+                self.config.read(self.settings_file)
+            except BaseException as e:
+                self.log.error("Failed to parse the config")
+                raise e
 
-        self.settings["name"] = self.config.get("GENERAL","name", fallback="")
-        self.settings["description"] = self.config.get("GENERAL", "description",  fallback="")
-        self.settings["copy_to"] = self.config.get("GENERAL", "copy_to", fallback=None)
-        self.settings["copy_from"] = self.config.get("GENERAL", "copy_from", fallback=None)
-        self.settings["virtual_environ_path"] = self.config.get("VIRTUAL_ENVIRONMENT", "path", fallback=None)
+            self.settings["name"] = self.config.get("GENERAL","name", fallback="")
+            self.settings["description"] = self.config.get("GENERAL", "description",  fallback="")
+            self.settings["copy_to"] = self.config.get("GENERAL", "copy_to", fallback=None)
+            self.settings["copy_from"] = self.config.get("GENERAL", "copy_from", fallback=None)
+            self.settings["virtual_environ_path"] = self.config.get("VIRTUAL_ENVIRONMENT", "path", fallback=None)
 
         if not self.settings["virtual_environ_path"]:
             self.log.error("No path for virtual environment found.")
