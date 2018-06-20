@@ -17,7 +17,10 @@ class TestException(Exception):
         self.message = message
 
 class Test():
-    def __init__(self, path, log_path):
+    def __init__(self, path, log_path, settings=None):
+        # init settings var
+        self.settings = {}
+
         try:
             self.path = os.path.abspath(path)
             self.log = logger.getChild(os.path.basename(self.path))
@@ -39,6 +42,8 @@ class Test():
             self.log.error("No such file: {}".format(self.recipe_file))
             raise TestException("No recipe file found")
 
+        self.cmd_settings = settings
+
     def read_settings(self):
         self.log.debug("Going to read all settings from the ini file")
         try:
@@ -48,25 +53,25 @@ class Test():
             self.log.error("Failed to parse the config")
             raise e
 
-        self.name = self.config.get("GENERAL","name", fallback="")
-        self.description = self.config.get("GENERAL", "description",  fallback="")
-        self.copy_to = self.config.get("GENERAL", "copy_to", fallback=None)
-        self.copy_from = self.config.get("GENERAL", "copy_from", fallback=None)
-        self.virtual_environ_path = self.config.get("VIRTUAL_ENVIRONMENT", "path", fallback=None)
+        self.settings["name"] = self.config.get("GENERAL","name", fallback="")
+        self.settings["description"] = self.config.get("GENERAL", "description",  fallback="")
+        self.settings["copy_to"] = self.config.get("GENERAL", "copy_to", fallback=None)
+        self.settings["copy_from"] = self.config.get("GENERAL", "copy_from", fallback=None)
+        self.settings["virtual_environ_path"] = self.config.get("VIRTUAL_ENVIRONMENT", "path", fallback=None)
 
-        if not self.virtual_environ_path:
+        if not self.settings["virtual_environ_path"]:
             self.log.error("No path for virtual environment found.")
             raise TestException("No path for virtual environment found.")
 
-        self.virtual_environ_path = os.path.normpath(self.path + "/" + self.virtual_environ_path)
+        self.settings["virtual_environ_path"] = os.path.normpath(self.path + "/" + self.settings["virtual_environ_path"])
 
         # Parse copy_from setting
-        if self.copy_from:
+        if self.settings["copy_from"]:
             self.log.debug("Going to parse the copy_from setting.")
-            self.copy_from = self.copy_from.split(",")
+            self.settings["copy_from"] = self.settings["copy_from"].split(",")
 
             tmp = []
-            for file in self.copy_from:
+            for file in self.settings["copy_from"]:
                 file = file.strip()
                 # If file is empty we do not want to add it to the list
                 if not file == "":
@@ -82,12 +87,12 @@ class Test():
                     self.log.debug("'{}' will be copied into all images".format(file))
                     tmp.append(file)
 
-            self.copy_from = tmp
+            self.settings["copy_from"] = tmp
 
 
 
     def virtual_environ_setup(self):
-        self.virtual_environ = virtual_environ.Virtual_environ(self.virtual_environ_path)
+        self.virtual_environ = virtual_environ.Virtual_environ(self.settings["virtual_environ_path"])
 
         self.virtual_networks = self.virtual_environ.get_networks()
 
@@ -102,8 +107,8 @@ class Test():
             self.virtual_machines[name].define()
             self.virtual_machines[name].create_snapshot()
             # We can only copy files when we know which and to which dir
-            if self.copy_from and self.copy_to:
-                self.virtual_machines[name].copy_in(self.copy_from, self.copy_to)
+            if self.settings["copy_from"] and self.settings["copy_to"]:
+                self.virtual_machines[name].copy_in(self.settings["copy_from"], self.settings["copy_to"])
             self.virtual_machines[name].start()
 
         # Time to which all serial output log entries are relativ
