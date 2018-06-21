@@ -26,6 +26,7 @@ class Disk():
         self.log.info("Going to copy some files into the image.")
         tmp = tempfile.mkstemp()
         tmp = tmp[1] + ".tar"
+        self.log.debug("Path of tarfile is: {}".format(tmp))
         with tarfile.open(tmp, "w") as tar:
             for file in fr:
                 self.log.debug("Adding {} to be copied into the image".format(file))
@@ -33,6 +34,7 @@ class Disk():
 
         self.log.info("Going to copy the files into the image")
         self.con.tar_in_opts(tmp, to)
+        self.log.debug(self.con.ls(to))
 
     def umount(self, path):
         self.log.info("Unmounting the image")
@@ -43,8 +45,8 @@ class Disk():
         self.con.shutdown()
         self.con.close()
 
-# test  = disk("/var/lib/libvirt/images/alice.qcow2")
-# test.mount("45598e92-3487-4a1b-961d-79aa3dd42a7d", "/")
+# test  = Disk("/var/lib/libvirt/images/ipfire-bob.qcow2")
+# test.mount("1efb5389-0949-46bb-b688-5246acba9f6d", "/")
 # test.copy_in("/home/jonatan/nitsi/libguestfs-test", "/root/")
 # test.umount("/")
 # test.close()
