@@ -21,6 +21,13 @@ class Test():
         # init settings var
         self.settings = {}
 
+        # Set default values for the settings dict
+        self.settings["name"] = ""
+        self.settings["description"] = ""
+        self.settings["copy_from"] = None
+        self.settings["copy_to"] = None
+        self.settings["virtual_environ_path"] = None
+
         self.cmd_settings = cmd_settings
         self.log_path = log_path
 
