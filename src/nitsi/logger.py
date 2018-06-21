@@ -13,15 +13,17 @@ class Logger_Exeception(BaseException):
 # and touch the logging files
 def init_logging(path):
     logger.debug("Init logging directory")
-    if not os.path.isdir(path):
-        logger.error("{} is not a valid directory".format(path))
 
     try:
         path = os.path.abspath(path)
     except BaseException as e:
         logger.error("Failed to get the absolute path for: {}".format(path))
 
-    log_dir = "{}/log".format(path)
+    if os.path.isdir(path):
+        log_dir = "{}/log".format(path)
+    elif os.path.isfile(path):
+        log_dir = "{}/{}.log".format(os.path.dirname(path), os.path.basename(path))
+
 
     if not os.path.exists(log_dir):
         os.mkdir(log_dir)
