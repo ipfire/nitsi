@@ -69,13 +69,20 @@ class Test():
             else:
                 self.settings_file = settings_file
 
-        if not os.path.isfile(self.settings_file):
-            logger.error("No such file: {}".format(self.settings_file))
-            raise TestException("No settings file found")
+        # We can also go on without a settings file
+        if self.settings_file:
+            if not os.path.isfile(self.settings_file):
+                logger.error("No such file: {}".format(self.settings_file))
+                raise TestException("No settings file found")
 
-        if not os.path.isfile(self.recipe_file):
-            logger.error("No such file: {}".format(self.recipe_file))
-            raise TestException("No recipe file found")
+        # os.path.isfile fails if self.recipe_file is None so we need to catch exceptions here
+        try:
+            if not (self.recipe_file or os.path.isfile(self.recipe_file)):
+                logger.error("No such file: {}".format(self.recipe_file))
+                raise TestException("No recipe file found")
+        except BaseException:
+            pass
+
 
         # Init logging
         if dir:
