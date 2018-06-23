@@ -6,6 +6,7 @@ import logging
 from nitsi.logger import init_logging, Log_Formatter
 from nitsi.recipe import RecipeExeption
 import nitsi.test
+import nitsi.settings
 
 logger = logging.getLogger("nitsi")
 
@@ -19,12 +20,23 @@ logger.addHandler(ch)
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-d", "--directory", dest="dir")
-
     parser.add_argument( "--log-level", choices=[ "debug", "error", "info", "warning" ], dest="log_level", default="info")
 
     parser.add_argument("-v", "--version", help="Display version and exit",
                     action="store_true", dest="version")
+
+    # Subparser for different commands
+    subparsers = parser.add_subparsers(dest="subparsers_name")
+
+    parser_run_test = subparsers.add_parser('run-test', help='run-test help')
+    parser_run_test.add_argument("-d", "--directory", dest="dir", default=None)
+    parser_run_test.add_argument("-r", "--recipe", dest="recipe", default=None)
+    parser_run_test.add_argument("-s", "--settings", dest="settings", default=None)
+    parser_run_test.add_argument("--name", dest="name", default=None)
+    parser_run_test.add_argument("--description", dest="desc", default=None)
+    parser_run_test.add_argument("--copy-to", dest="copy_to", default=None)
+    parser_run_test.add_argument("--copy-from", dest="copy_from", default=None, nargs='+')
+    parser_run_test.add_argument("--virtual-environment", dest="virtual_environ_path", default=None)
 
     args = parser.parse_args()
 
@@ -46,36 +58,68 @@ def main():
     elif args.log_level == "error":
         logger.setLevel(logging.ERROR)
 
-    # For all other stuff we need logging to a file
-    log_dir = init_logging(args.dir)
-    # We now going to log everything to log_dir/genaral.log
-    fh = logging.FileHandler("{}/general.log".format(log_dir))
-    logger.addHandler(fh)
-    logger.debug("We now logging everything to {}/general.log".format(log_dir))
 
-    # here we run a test
-    try:
-        currenttest = nitsi.test.Test(log_dir, dir=args.dir)
-        currenttest.read_settings()
-        currenttest.virtual_environ_setup()
-        currenttest.load_recipe()
-    except RecipeExeption as e:
-        logger.exception(e)
-        return 2
+    if args.subparsers_name == "run-test":
+        if not (args.dir or args.recipe):
+            logger.error("You need to provide at least a director of a test '-d' or a recipe file '-r'")
+            return 4
 
-    try:
-        currenttest.virtual_environ_start()
-        currenttest.run_recipe()
-    except nitsi.test.TestException as e:
-        logger.exception(e)
-        return 1
-    except BaseException as e:
-        logger.exception(e)
-        return 3
-    finally:
-        currenttest.virtual_environ_stop()
+        if (args.dir and args.recipe) or (args.dir and args.settings):
+            logger.error("You cannot use the options '-d' and '-r' or '-d' and '-s' at the same time")
+            return 4
 
-    return 0
+        # For all other stuff we need logging to a file
+        if args.dir:
+            log_dir = init_logging(args.dir)
+        elif args.recipe:
+            log_dir = init_logging(args.recipe)
+
+        # We now going to log everything to log_dir/genaral.log
+        fh = logging.FileHandler("{}/general.log".format(log_dir))
+        logger.addHandler(fh)
+        logger.debug("We now logging everything to {}/general.log".format(log_dir))
+
+        # Build up settings dict
+        settings = {}
+        if args.name:
+            settings["name"] = args.name
+        if args.desc:
+            settings["description"] = args.desc
+        if args.copy_to:
+            settings["copy_to"] = args.copy_to
+        if args.copy_from:
+            settings["copy_from"] =  nitsi.settings.settings_parse_copy_from(args.copy_from)
+        if args.virtual_environ_path:
+            settings["virtual_environ_path"] = args.virtual_environ_path
+
+        # here we run a test
+        try:
+            currenttest = nitsi.test.Test(
+                log_dir,
+                dir=args.dir,
+                recipe_file=args.recipe,
+                settings_file=args.settings,
+                cmd_settings=settings)
+            currenttest.read_settings()
+            currenttest.virtual_environ_setup()
+            currenttest.load_recipe()
+        except RecipeExeption as e:
+            logger.exception(e)
+            return 2
+
+        try:
+            currenttest.virtual_environ_start()
+            currenttest.run_recipe()
+        except nitsi.test.TestException as e:
+            logger.exception(e)
+            return 1
+        except BaseException as e:
+            logger.exception(e)
+            return 3
+        finally:
+            currenttest.virtual_environ_stop()
+
+        return 0
 
 if __name__ == "__main__":
    return_value = main()

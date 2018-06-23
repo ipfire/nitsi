@@ -8,6 +8,7 @@ import time
 
 from . import recipe
 from . import virtual_environ
+from . import settings
 
 logger = logging.getLogger("nitsi.test")
 
@@ -107,36 +108,32 @@ class Test():
             self.settings["copy_from"] = self.config.get("GENERAL", "copy_from", fallback=None)
             self.settings["virtual_environ_path"] = self.config.get("VIRTUAL_ENVIRONMENT", "path", fallback=None)
 
+            # We need to parse some settings here because they are loaded from a settings file
+            if not os.path.isabs(self.settings["virtual_environ_path"]):
+                self.settings["virtual_environ_path"] = os.path.normpath(os.path.dirname(
+                    self.settings_file) + "/" + self.settings["virtual_environ_path"])
+
+            # Parse copy_from setting
+            if self.settings["copy_from"]:
+                self.settings["copy_from"] = settings.settings_parse_copy_from(self.settings["copy_from"],
+                path=os.path.dirname(self.settings_file))
+
+        # Update all settings from the cmd
+        self.settings.update(self.cmd_settings)
+
+        if not os.path.isabs(self.settings["virtual_environ_path"]):
+            self.settings["virtual_environ_path"] = os.path.abspath(self.settings["virtual_environ_path"])
+
+
+        # Check if we get at least a valid a valid path to virtual environ
         if not self.settings["virtual_environ_path"]:
             self.log.error("No path for virtual environment found.")
             raise TestException("No path for virtual environment found.")
 
-        self.settings["virtual_environ_path"] = os.path.normpath(self.path + "/" + self.settings["virtual_environ_path"])
-
-        # Parse copy_from setting
-        if self.settings["copy_from"]:
-            self.log.debug("Going to parse the copy_from setting.")
-            self.settings["copy_from"] = self.settings["copy_from"].split(",")
-
-            tmp = []
-            for file in self.settings["copy_from"]:
-                file = file.strip()
-                # If file is empty we do not want to add it to the list
-                if not file == "":
-                    # If we get an absolut path we do nothing
-                    # If not we add self.path to get an absolut path
-                    if not os.path.isabs(file):
-                        file = os.path.normpath(self.path + "/" + file)
-
-                    # We need to check if file is a valid file or dir
-                    if not (os.path.isdir(file) or os.path.isfile(file)):
-                        raise TestException("'{}' is not a valid file nor a valid directory".format(file))
-
-                    self.log.debug("'{}' will be copied into all images".format(file))
-                    tmp.append(file)
-
-            self.settings["copy_from"] = tmp
-
+        # Print all settings for debugging purpose
+        self.log.debug("Settings are:")
+        for key in self.settings:
+            self.log.debug("{}: {}".format(key, self.settings[key]))
 
 
     def virtual_environ_setup(self):
