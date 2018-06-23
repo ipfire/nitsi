@@ -37,6 +37,7 @@ nitsi_PYTHON = \
 	src/nitsi/network.py \
 	src/nitsi/recipe.py \
 	src/nitsi/serial_connection.py \
+	src/nitsi/settings.py \
 	src/nitsi/test.py \
 	src/nitsi/virtual_environ.py
 
