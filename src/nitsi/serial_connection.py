@@ -11,7 +11,7 @@ from . import logger
 
 log = logging.getLogger("nitsi.serial")
 
-class Serial_connection():
+class SerialConnection():
     def __init__(self, device, username=None, log_file=None, name=None, log_start_time=None, longest_machine_name=10):
         self.buffer = b""
         self.back_at_prompt_pattern =  None

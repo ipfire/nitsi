@@ -138,7 +138,7 @@ class Test():
 
 
     def virtual_environ_setup(self):
-        self.virtual_environ = virtual_environ.Virtual_environ(self.settings["virtual_environ_path"])
+        self.virtual_environ = virtual_environ.VirtualEnviron(self.settings["virtual_environ_path"])
 
         self.virtual_networks = self.virtual_environ.get_networks()
 

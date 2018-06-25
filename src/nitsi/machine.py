@@ -128,7 +128,7 @@ class Machine():
         return elem.text
 
     def check_is_booted_up(self):
-        serial_con = serial_connection.Serial_connection(self.get_serial_device())
+        serial_con = serial_connection.SerialConnection(self.get_serial_device())
 
         serial_con.write("\n")
         # This will block till the domain is booted up
@@ -138,7 +138,7 @@ class Machine():
 
     def login(self, log_file, log_start_time=None, longest_machine_name=10):
         try:
-            self.serial_con = serial_connection.Serial_connection(self.get_serial_device(),
+            self.serial_con = serial_connection.SerialConnection(self.get_serial_device(),
                                 username=self.username,
                                 log_file=log_file,
                                 log_start_time=log_start_time,

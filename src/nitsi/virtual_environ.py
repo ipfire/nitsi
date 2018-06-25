@@ -12,7 +12,7 @@ logger = logging.getLogger("nitsi.virtual_environ")
 
 # Should return all vms and networks in a list
 # and should provide the path to the necessary xml files
-class Virtual_environ():
+class VirtualEnviron():
     def __init__(self, path):
         self.log = logger.getChild(os.path.basename(os.path.abspath(path)))
         try:
