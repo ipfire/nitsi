@@ -81,7 +81,9 @@ class SerialConnection():
         return data + self.con.readline()
 
     def back_at_prompt(self):
+        self.log.debug("Check if we are back at prompt")
         data = self.peek()
+        self.log.debug("First char in buffer is: '{}'".format(data.decode()))
         if not data == b"[":
             return False
 
@@ -89,7 +91,12 @@ class SerialConnection():
         # not the complete string
         size = len(self.buffer) + self.in_waiting
         data = self.peek(size)
+        self.log.debug("Data is: '{}'".format(data))
 
+        # When we have an \n in the buffer we are not at the prompt,
+        # instead we still have a line in the buffer
+        if self.line_in_buffer():
+            return False
 
         if self.back_at_prompt_pattern == None:
             #self.back_at_prompt_pattern = r"^\[{}@.+\]#".format(self.username)
@@ -215,6 +222,8 @@ class SerialConnection():
         while not self.back_at_prompt():
             data = self.readline()
             self.log_console_line(data.decode())
+
+        self.log.debug("We get a prompt so we should be in the last line")
 
         # We saved our exit code in data (the last line)
         self.log.debug(data.decode())
