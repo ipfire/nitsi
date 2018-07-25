@@ -144,12 +144,28 @@ class Test():
 
         self.virtual_machines = self.virtual_environ.get_machines()
 
+        # built up which machines which are used in our recipe
+        used_machines = []
+
+        for line in self.recipe.recipe:
+            if not line[0] in used_machines:
+                used_machines.append(line[0])
+
+        self.log.debug("Machines used in this recipe {}".format(used_machines))
+
+        self.used_machine_names = used_machines
+
+        for machine in self.used_machine_names:
+            if not machine in self.virtual_environ.machine_names:
+                raise TestException("{} is listed as machine in the recipe, but the virtual environmet does not have such a machine".format(machine))
+
+
     def virtual_environ_start(self):
         for name in self.virtual_environ.network_names:
             self.virtual_networks[name].define()
             self.virtual_networks[name].start()
 
-        for name in self.virtual_environ.machine_names:
+        for name in self.used_machine_names:
             self.virtual_machines[name].define()
             self.virtual_machines[name].create_snapshot()
             # We can only copy files when we know which and to which dir
@@ -164,7 +180,7 @@ class Test():
         longest_machine_name = self.virtual_environ.longest_machine_name
 
         self.log.info("Try to login on all machines")
-        for name in self.virtual_environ.machine_names:
+        for name in self.used_machine_names:
             self.log.info("Try to login on {}".format(name))
             self.virtual_machines[name].login("{}/test.log".format(self.log_path),
                                                 log_start_time=log_start_time,
@@ -194,7 +210,7 @@ class Test():
                 self.log.debug("Command '{}' on {} returned with: {}".format(line[2],line[0],return_value))
 
     def virtual_environ_stop(self):
-        for name in self.virtual_environ.machine_names:
+        for name in self.used_machine_names:
             # We just catch exception here to avoid
             # that we stop the cleanup process if only  one command fails
             try:
