@@ -30,12 +30,16 @@ class Recipe():
         self.log.debug("Path of recipe is: {}".format(self.recipe_file))
         self._recipe = None
         self._machines = machines
+        self._fallback_machines = fallback_machines
 
         self.log.debug("Machine names we use when we substitute the all statement: {}".format(self._machines))
 
+        self.log.debug("Length of the cirle list {}".format(len(circle)))
         self.in_recursion = True
         if len(circle) == 0:
             self.in_recursion = False
+
+        self.log.debug("We are in a recursion: {}".format(self.in_recursion))
 
         self.circle = circle
         self.log.debug("Recipes we have already included: {}".format(self.circle))
@@ -83,6 +87,7 @@ class Recipe():
                 self.log.error("Error parsing the recipe in line {}".format(i))
                 raise RecipeExeption("Error parsing the recipe in line {}".format(i))
             cmd = raw_line[1].strip()
+
             raw_line = raw_line[0].strip().split(" ")
             if len(raw_line) == 0:
                 self.log.error("Failed to parse the recipe in line {}".format(i))
