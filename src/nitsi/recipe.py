@@ -16,7 +16,7 @@ class RecipeExeption(Exception):
 # Should read the test, check if the syntax are valid
 # and return tuples with the ( host, command ) structure
 class Recipe():
-    def __init__(self, path, circle=[], machines=[]):
+    def __init__(self, path, circle=[], machines=[], fallback_machines=[]):
         self.recipe_file = path
         try:
             self.path = os.path.dirname(self.recipe_file)
@@ -126,15 +126,46 @@ class Recipe():
                 machines = machine.split(",")
                 for machine in machines:
                     self._recipe.append((machine.strip(), extra.strip(), cmd.strip()))
+
+            # Increase the line number by one
             i = i + 1
 
-            if not self.in_recursion:
-                tmp_recipe = []
-                for line in self._recipe:
-                    if line[0] != "all":
-                        tmp_recipe.append(line)
-                    else:
-                        for machine in self.machines:
-                            tmp_recipe.append((machine.strip(), line[1], line[2]))
+        # Substitue the all statement
+        if not self.in_recursion:
+            self.log.debug("We are not in a recursion")
+            # We will store the machine names we use to substitute the all statement
+            # in tmp_machines to keep the code which actually does the substitution clear
+            tmp_machines = None
 
-                self._recipe = tmp_recipe
+            # Check if we get a setting to substitute the all statement
+            if len(self.machines) != 0:
+                tmp_machines = self.machines
+
+            # Second try to fill tmp_machines
+            if not tmp_machines:
+                #  dertermine machines we use in this recipe
+                tmp = []
+                for line in self.recipe:
+                    self.log.debug(line)
+                    if not line[0] in tmp and line[0] != "all":
+                        tmp.append(line[0])
+
+                self.log.debug("Machines except all in the recipe: {}".format(tmp))
+
+                # Check if we got anything else then all: in th recipe
+                if len(tmp) != 0:
+                    tmp_machines = tmp
+
+            # If we get here we are using all machines in the virtual environment as fallback value
+            if not tmp_machines:
+                tmp_machines = self._fallback_machines
+
+            tmp_recipe = []
+            for line in self._recipe:
+                if line[0] != "all":
+                    tmp_recipe.append(line)
+                else:
+                    for machine in tmp_machines:
+                        tmp_recipe.append((machine.strip(), line[1], line[2]))
+
+            self._recipe = tmp_recipe
