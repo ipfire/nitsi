@@ -101,8 +101,9 @@ def main():
                 settings_file=args.settings,
                 cmd_settings=settings)
             currenttest.read_settings()
+            currenttest.virtual_environ_setup_stage_1()
             currenttest.load_recipe()
-            currenttest.virtual_environ_setup()
+            currenttest.virtual_environ_setup_stage_2()
         except RecipeExeption as e:
             logger.exception(e)
             return 2

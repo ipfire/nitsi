@@ -137,13 +137,14 @@ class Test():
             self.log.debug("{}: {}".format(key, self.settings[key]))
 
 
-    def virtual_environ_setup(self):
+    def virtual_environ_setup_stage_1(self):
         self.virtual_environ = virtual_environ.VirtualEnviron(self.settings["virtual_environ_path"])
 
         self.virtual_networks = self.virtual_environ.get_networks()
 
         self.virtual_machines = self.virtual_environ.get_machines()
 
+    def virtual_environ_setup_stage_2(self):
         # built up which machines which are used in our recipe
         used_machines = []
 
