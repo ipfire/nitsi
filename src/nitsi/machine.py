@@ -19,6 +19,7 @@ class Machine():
         # self.snapshot should be also at least None
         self.snapshot = None
 
+        self.serial_con = None
 
         try:
             with open(vm_xml_file) as fobj:
@@ -136,17 +137,37 @@ class Machine():
 
         #serial_con.close()
 
-    def login(self, log_file, log_start_time=None, longest_machine_name=10):
+    # This function should initialize the serial connection
+    def serial_init(self, log_file=None, log_start_time=None, longest_machine_name=10):
         try:
             self.serial_con = serial_connection.SerialConnection(self.get_serial_device(),
-                                username=self.username,
-                                log_file=log_file,
-                                log_start_time=log_start_time,
-                                name=self.name,
-                                longest_machine_name=longest_machine_name)
-            self.serial_con.login(self.password)
+                            username=self.username,
+                            password= self.password,
+                            log_file=log_file,
+                            log_start_time=log_start_time,
+                            name=self.name,
+                            longest_machine_name=longest_machine_name)
+        except BaseException as e:
+            self.log.error("Could initialize the serial console")
+            self.log.exception(e)
+            raise e
+
+
+    # This function should create a ready to use serial connection for this serial domain
+    def serial_connect(self):
+        try:
+            # Do the real connect
+            self.serial_con.connect()
         except BaseException as e:
             self.log.error("Could not connect to the domain via serial console")
+            self.log.exception(e)
+            raise e
+
+    def serial_disconnect(self):
+        try:
+            self.serial_con.disconnect()
+        except BaseException as e:
+            self.log.error("Could not disconnect from the serial console")
             self.log.exception(e)
             raise e
 

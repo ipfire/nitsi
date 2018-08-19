@@ -12,15 +12,21 @@ from . import logger
 log = logging.getLogger("nitsi.serial")
 
 class SerialConnection():
-    def __init__(self, device, username=None, log_file=None, name=None, log_start_time=None, longest_machine_name=10):
+    def __init__(self, device, username=None, password=None, log_file=None, name=None, log_start_time=None, longest_machine_name=10):
         self.buffer = b""
         self.back_at_prompt_pattern =  None
         self.username = username
+        self.password = password
         self.name = name
+        self.device = device
         self.log_file = log_file
         self.log = log.getChild(name)
         self.log.setLevel(logging.INFO)
-        self.con = serial.Serial(device)
+
+        # We create here a closed serial connection
+        self.con = serial.Serial()
+        # Set the port in a second step to avoid that the connection is brought up automatically
+        self.con.port = self.device
 
         self.log_output = self.log.getChild("output")
         # Do not propagate the output to ancestor loggers as it looks ugly
@@ -40,6 +46,23 @@ class SerialConnection():
         stream_handler.setFormatter(formatter)
         self.log_output.addHandler(log_file_handler)
         self.log_output.addHandler(stream_handler)
+
+    def connect(self):
+        # Check if the serial port is open, if not open the port
+        if self.con.is_open:
+            self.log.debug("Connection to the serial port is open")
+        else:
+            self.log.debug("Connection to the serial port is closed, try to open it.")
+            self.con.open()
+        # Try to login, if we are already logged in we detect this and exit the function
+        self.login()
+
+    def disconnect(self):
+        if not self.con.is_open:
+            self.log.debug("Connection to the serial port is already closed")
+        else:
+            self.log.debug("Connection to the serial port is open, try to close it.")
+            self.con.close()
 
     def read(self, size=1):
         if len(self.buffer) >= size:
@@ -142,7 +165,7 @@ class SerialConnection():
                 self.log.debug("We have printed all lines in the buffer")
                 break
 
-    def login(self, password):
+    def login(self):
         if self.username == None:
             self.log.error("Username cannot be blank")
             return False
@@ -191,7 +214,7 @@ class SerialConnection():
         #This is useless but self.in_waiting will wait the correct amount of time
         size = self.in_waiting
 
-        string = "{}\n".format(password)
+        string = "{}\n".format(self.password)
         self.con.write(string.encode())
         self.con.flush()
         # Print the 'Password:' line

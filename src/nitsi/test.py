@@ -180,12 +180,13 @@ class Test():
         # Number of chars of the longest machine name
         longest_machine_name = self.virtual_environ.longest_machine_name
 
-        self.log.info("Try to login on all machines")
+        self.log.info("Try to intialize the serial connection, connect and login on all machines")
         for name in self.used_machine_names:
-            self.log.info("Try to login on {}".format(name))
-            self.virtual_machines[name].login("{}/test.log".format(self.log_path),
+            self.log.info("Try to initialize the serial connection connect and login on {}".format(name))
+            self.virtual_machines[name].serial_init(log_file="{}/test.log".format(self.log_path),
                                                 log_start_time=log_start_time,
                                                 longest_machine_name=longest_machine_name)
+            self.virtual_machines[name].serial_connect()
 
     def load_recipe(self):
         self.log.info("Going to load the recipe")
