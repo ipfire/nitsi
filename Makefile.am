@@ -31,6 +31,7 @@ EXTRA_DIST += \
 
 nitsi_PYTHON = \
 	src/nitsi/__init__.py \
+	src/nitsi/cmd.py \
 	src/nitsi/disk.py \
 	src/nitsi/logger.py \
 	src/nitsi/machine.py \
