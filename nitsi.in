@@ -38,6 +38,7 @@ def main():
     parser_run_test.add_argument("--copy-to", dest="copy_to", default=None)
     parser_run_test.add_argument("--copy-from", dest="copy_from", default=None, nargs='+')
     parser_run_test.add_argument("--virtual-environment", dest="virtual_environ_path", default=None)
+    parser_run_test.add_argument("--interactive-error-handling", dest="interactive_error_handling", default=False, action="store_true")
 
     args = parser.parse_args()
 
@@ -96,6 +97,8 @@ def main():
             if not os.path.isabs(path):
                 path = os.path.abspath(path)
             settings.set_config_value("virtual_environ_path", path, type="cmd")
+        if args.interactive_error_handling:
+            settings.set_config_value("interactive_error_handling", True, type="cmd")
 
         # here we run a test
         try:
