@@ -58,7 +58,7 @@ def main():
     elif args.log_level == "error":
         logger.setLevel(logging.ERROR)
 
-
+    # Here we are going to run a test
     if args.subparsers_name == "run-test":
         if not (args.dir or args.recipe):
             logger.error("You need to provide at least a director of a test '-d' or a recipe file '-r'")
