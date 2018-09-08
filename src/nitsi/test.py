@@ -53,31 +53,11 @@ class Test():
 
 
         # We can also go on without a settings file
-        if self.settings_file:
-            if not os.path.isfile(self.settings_file):
-                logger.error("No such file: {}".format(self.settings_file))
-                raise TestException("No settings file found")
+        self.settings_file = self.check_file(self.settings_file)
 
-        # os.path.isfile fails if self.recipe_file is None so we cannot use an and statement
-        if self.recipe_file:
-            if not os.path.isfile(self.recipe_file):
-                logger.error("No such file: {}".format(self.recipe_file))
-                raise TestException("No recipe file found")
-        else:
-            logger.error("No such file: {}".format(self.recipe_file))
+        self.recipe_file = self.check_file(self.recipe_file)
+        if not self.recipe_file:
             raise TestException("No recipe file found")
-
-        if recipe_file:
-            if not os.path.isabs(recipe_file):
-                self.recipe_file = os.path.abspath(recipe_file)
-            else:
-                self.recipe_file = recipe_file
-
-        if settings_file:
-            if not os.path.isabs(settings_file):
-                self.settings_file = os.path.abspath(settings_file)
-            else:
-                self.settings_file = settings_file
 
 
         # Init logging
@@ -93,6 +73,21 @@ class Test():
 
         # Check settings
         self.settings.check_config_values()
+
+    # Checks the file:
+    # is the path valid ?
+    # returns an absolut path, when the file is valid, None when not
+    def check_file(self, file):
+        if file:
+            if not os.path.isfile(file):
+                err_msg = "No such file: {}".format(self.recipe_file)
+                logger.error(err_msg)
+                return None
+            if not os.path.isabs(file):
+               file = os.path.abspath(file)
+
+            return file
+        return None
 
     def virtual_environ_setup_stage_1(self):
         self.virtual_environ = virtual_environ.VirtualEnviron(self.settings.get_config_value("virtual_environ_path"))
