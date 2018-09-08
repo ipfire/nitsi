@@ -60,17 +60,6 @@ class Test():
             self.recipe_file = "{}/recipe".format(self.path)
             self.settings_file = "{}/settings".format(self.path)
 
-        if recipe_file:
-            if not os.path.isabs(recipe_file):
-                self.recipe_file = os.path.abspath(recipe_file)
-            else:
-                self.recipe_file = recipe_file
-
-        if settings_file:
-            if not os.path.isabs(settings_file):
-                self.settings_file = os.path.abspath(settings_file)
-            else:
-                self.settings_file = settings_file
 
         # We can also go on without a settings file
         if self.settings_file:
@@ -86,6 +75,18 @@ class Test():
         else:
             logger.error("No such file: {}".format(self.recipe_file))
             raise TestException("No recipe file found")
+
+        if recipe_file:
+            if not os.path.isabs(recipe_file):
+                self.recipe_file = os.path.abspath(recipe_file)
+            else:
+                self.recipe_file = recipe_file
+
+        if settings_file:
+            if not os.path.isabs(settings_file):
+                self.settings_file = os.path.abspath(settings_file)
+            else:
+                self.settings_file = settings_file
 
 
         # Init logging
