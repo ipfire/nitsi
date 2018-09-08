@@ -91,9 +91,9 @@ class Test():
 
         # Init logging
         if dir:
-             self.log = logger.getChild(os.path.basename(self.path))
-
-        if recipe:
+            self.log = logger.getChild(os.path.basename(self.path))
+        # We get a recipe when we get here
+        else:
             self.log = logger.getChild(os.path.basename(self.recipe_file))
 
     def read_settings(self):
