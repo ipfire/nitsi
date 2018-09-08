@@ -19,19 +19,10 @@ class TestException(Exception):
         self.message = message
 
 class Test():
-    def __init__(self, log_path, dir=None, recipe_file=None, settings_file=None, cmd_settings=None):
+    def __init__(self, log_path, dir=None, recipe_file=None, settings_file=None, settings=None):
         # init settings var
-        self.settings = {}
+        self.settings = settings
 
-        # Set default values for the settings dict
-        self.settings["name"] = ""
-        self.settings["description"] = ""
-        self.settings["copy_from"] = None
-        self.settings["copy_to"] = None
-        self.settings["virtual_environ_path"] = None
-        self.settings["interactive_error_handling"] = True
-
-        self.cmd_settings = cmd_settings
         self.log_path = log_path
 
         # Init all vars with None
@@ -96,52 +87,15 @@ class Test():
         else:
             self.log = logger.getChild(os.path.basename(self.recipe_file))
 
-    def read_settings(self):
+        # Parse config and settings:
         if self.settings_file:
-            self.log.debug("Going to read all settings from the ini file")
-            try:
-                self.config = configparser.ConfigParser()
-                self.config.read(self.settings_file)
-            except BaseException as e:
-                self.log.error("Failed to parse the config")
-                raise e
+            self.settings.set_config_values_from_file(self.settings_file, type="settings-file")#
 
-            self.settings["name"] = self.config.get("GENERAL","name", fallback="")
-            self.settings["description"] = self.config.get("GENERAL", "description",  fallback="")
-            self.settings["copy_to"] = self.config.get("GENERAL", "copy_to", fallback=None)
-            self.settings["copy_from"] = self.config.get("GENERAL", "copy_from", fallback=None)
-            self.settings["virtual_environ_path"] = self.config.get("VIRTUAL_ENVIRONMENT", "path", fallback=None)
-
-            # We need to parse some settings here because they are loaded from a settings file
-            if not os.path.isabs(self.settings["virtual_environ_path"]):
-                self.settings["virtual_environ_path"] = os.path.normpath(os.path.dirname(
-                    self.settings_file) + "/" + self.settings["virtual_environ_path"])
-
-            # Parse copy_from setting
-            if self.settings["copy_from"]:
-                self.settings["copy_from"] = settings.settings_parse_copy_from(self.settings["copy_from"],
-                path=os.path.dirname(self.settings_file))
-
-        # Update all settings from the cmd
-        self.settings.update(self.cmd_settings)
-
-        if not os.path.isabs(self.settings["virtual_environ_path"]):
-            self.settings["virtual_environ_path"] = os.path.abspath(self.settings["virtual_environ_path"])
-
-
-        # Check if we get at least a valid a valid path to virtual environ
-        if not self.settings["virtual_environ_path"]:
-            self.log.error("No path for virtual environment found.")
-            raise TestException("No path for virtual environment found.")
-
-        # Print all settings for debugging purpose
-        self.log.debug("Settings are:")
-        for key in self.settings:
-            self.log.debug("{}: {}".format(key, self.settings[key]))
-
+        # Check settings
+        self.settings.check_config_values()
 
     def virtual_environ_setup_stage_1(self):
-        self.virtual_environ = virtual_environ.VirtualEnviron(self.settings["virtual_environ_path"])
+        self.virtual_environ = virtual_environ.VirtualEnviron(self.settings.get_config_value("virtual_environ_path"))
 
         self.virtual_networks = self.virtual_environ.get_networks()
 
@@ -173,8 +127,8 @@ class Test():
             self.virtual_machines[name].define()
             self.virtual_machines[name].create_snapshot()
             # We can only copy files when we know which and to which dir
-            if self.settings["copy_from"] and self.settings["copy_to"]:
-                self.virtual_machines[name].copy_in(self.settings["copy_from"], self.settings["copy_to"])
+            if self.settings.get_config_value("copy_from") and self.settings.get_config_value("copy_to"):
+                self.virtual_machines[name].copy_in(self.settings.get_config_value("copy_from"), self.settings.get_config_value("copy_to"))
             self.virtual_machines[name].start()
 
         # Time to which all serial output log entries are relativ
@@ -209,7 +163,7 @@ class Test():
     # in an interactive way
     # returns False when the test should exit right now, and True when the test should go on
     def interactive_error_handling(self):
-        if not self.settings["interactive_error_handling"]:
+        if not self.settings.get_config_value("interactive_error_handling"):
             return False
 
         _cmd = cmd.CMD(intro="You are droppped into an interative debugging shell because of the previous errors",
