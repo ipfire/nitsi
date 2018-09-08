@@ -205,7 +205,7 @@ class Test():
             self.log.error("Failed to load recipe")
             raise e
 
-    # This functions tries to handle an rror of the test (eg. when 'echo "Hello World"' failed)
+    # This functions tries to handle an error of the test (eg. when 'echo "Hello World"' failed)
     # in an interactive way
     # returns False when the test should exit right now, and True when the test should go on
     def interactive_error_handling(self):
