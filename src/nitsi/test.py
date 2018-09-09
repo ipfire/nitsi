@@ -53,7 +53,7 @@ class Test():
 
 
         # We can also go on without a settings file
-        self.settings_file = self.check_file(self.settings_file)
+        self.settings_file = self.check_file(self.settings_file, log_level=logging.WARNING)
 
         self.recipe_file = self.check_file(self.recipe_file)
         if not self.recipe_file:
@@ -77,11 +77,12 @@ class Test():
     # Checks the file:
     # is the path valid ?
     # returns an absolut path, when the file is valid, None when not
-    def check_file(self, file):
+    def check_file(self, file, log_level=logging.ERROR):
         if file:
+            logger.debug("File to check is: {}".format(file))
             if not os.path.isfile(file):
-                err_msg = "No such file: {}".format(self.recipe_file)
-                logger.error(err_msg)
+                err_msg = "No such file: {}".format(file)
+                logger.log(log_level,err_msg)
                 return None
             if not os.path.isabs(file):
                file = os.path.abspath(file)
