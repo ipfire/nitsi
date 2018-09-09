@@ -106,6 +106,7 @@ class NitsiSettings(CommonSettings):
     def set_config_values_from_file(self, file, type):
         self.check_type(type)
 
+        logger.debug("Path of settings file is: {}".format(file))
         # Check that file is an valid file
         if not os.path.isfile(file):
             raise SettingsException("No such file: {}".format(file))
