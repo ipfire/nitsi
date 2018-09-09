@@ -33,6 +33,7 @@ def main():
     parser_run_test.add_argument("-d", "--directory", dest="dir", default=None)
     parser_run_test.add_argument("-r", "--recipe", dest="recipe", default=None)
     parser_run_test.add_argument("-s", "--settings", dest="settings", default=None)
+    parser_run_test.add_argument("--default-settings", dest="default_settings", default=None)
     parser_run_test.add_argument("--name", dest="name", default=None)
     parser_run_test.add_argument("--description", dest="desc", default=None)
     parser_run_test.add_argument("--copy-to", dest="copy_to", default=None)
@@ -82,7 +83,7 @@ def main():
         logger.debug("We now logging everything to {}/general.log".format(log_dir))
 
         # Build up settings
-        settings = nitsi.settings.NitsiSettings(priority_list=["cmd", "settings-file", "nitsi-default"])
+        settings = nitsi.settings.NitsiSettings(priority_list=["cmd", "settings-file", "default-settings-file", "nitsi-default"])
 
         if args.name:
             settings.set_config_value("name", args.name, type="cmd")
@@ -107,7 +108,8 @@ def main():
                 dir=args.dir,
                 recipe_file=args.recipe,
                 settings_file=args.settings,
-                settings=settings)
+                settings=settings,
+                default_settings_file=args.default_settings)
             currenttest.virtual_environ_setup_stage_1()
             currenttest.load_recipe()
             currenttest.virtual_environ_setup_stage_2()

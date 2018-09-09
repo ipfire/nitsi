@@ -19,7 +19,7 @@ class TestException(Exception):
         self.message = message
 
 class Test():
-    def __init__(self, log_path, dir=None, recipe_file=None, settings_file=None, settings=None):
+    def __init__(self, log_path, dir=None, recipe_file=None, settings_file=None, settings=None, default_settings_file=None):
         # init settings var
         self.settings = settings
 
@@ -29,6 +29,8 @@ class Test():
         self.settings_file = None
         self.recipe_file = None
         self.path = None
+
+        self.default_settings_file = default_settings_file
 
         # We need at least a path to a recipe file or a dir to a test
         if not dir and not recipe:
@@ -59,6 +61,7 @@ class Test():
         if not self.recipe_file:
             raise TestException("No recipe file found")
 
+        self.default_settings_file = self.check_file(self.default_settings_file)
 
         # Init logging
         if dir:
@@ -69,7 +72,10 @@ class Test():
 
         # Parse config and settings:
         if self.settings_file:
-            self.settings.set_config_values_from_file(self.settings_file, type="settings-file")#
+            self.settings.set_config_values_from_file(self.settings_file, type="settings-file")
+
+        if self.default_settings_file:
+            self.settings.set_config_values_from_file(self.default_settings_file, type="default-settings-file")
 
         # Check settings
         self.settings.check_config_values()
