@@ -16,7 +16,7 @@ class RecipeExeption(Exception):
 # Should read the test, check if the syntax are valid
 # and return tuples with the ( host, command ) structure
 class Recipe():
-    def __init__(self, path, circle=[], machines=[], fallback_machines=[]):
+    def __init__(self, path, circle=[], machines=[], fallback_machines=[], include_path=None):
         self.recipe_file = path
         try:
             self.path = os.path.dirname(self.recipe_file)
@@ -28,6 +28,15 @@ class Recipe():
 
         self.log = logger.getChild(self.name)
         self.log.debug("Path of recipe is: {}".format(self.recipe_file))
+
+        # This path must be absolut
+        self.include_path = include_path
+
+        if self.include_path and not os.path.isabs(self.include_path):
+            raise RecipeExeption("Include path must be absolut.")
+
+        self.log.debug("Include path is: {}".format(self.include_path))
+
         self._recipe = None
         self._machines = machines
         self._fallback_machines = fallback_machines
@@ -107,17 +116,22 @@ class Recipe():
             # We could get a machine here or a include statement
             if machine == "include":
                 path = cmd.strip()
-                path = os.path.normpath(self.path + "/" + path)
+                if self.include_path:
+                    path = os.path.normpath(self.include_path + "/" + path)
+                else:
+                    path = os.path.normpath(self.path + "/" + path)
 
                 # If we did not get a valid file we asume that we get a valid path to a test.
                 if os.path.isdir(path):
                     path = path + "/recipe"
 
+                self.log.debug("Path of recipe to include is: {}".format(path))
+
                 if path in self.circle:
                     self.log.error("Detect import loop!")
                     raise RecipeExeption("Detect import loop!")
                 self.circle.append(path)
-                recipe_to_include = Recipe(path, circle=self.circle)
+                recipe_to_include = Recipe(path, circle=self.circle, include_path=self.include_path)
 
             if machine == "include":
                 self._recipe.extend(recipe_to_include.recipe)

@@ -151,7 +151,8 @@ class Test():
         self.log.info("Going to load the recipe")
         try:
             self.recipe = recipe.Recipe(self.recipe_file,
-                fallback_machines=self.virtual_environ.machine_names)
+                fallback_machines=self.virtual_environ.machine_names,
+                include_path=self.settings.get_config_value("include_path"))
 
             for line in self.recipe.recipe:
                 self.log.debug(line)

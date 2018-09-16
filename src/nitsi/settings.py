@@ -102,6 +102,7 @@ class NitsiSettings(CommonSettings):
         self.set_config_value("copy_to", None, type="nitsi-default")
         self.set_config_value("virtual_environ_path", None, type="nitsi-default")
         self.set_config_value("interactive_error_handling", False, type="nitsi-default")
+        self.set_config_value("include_path", None, type="nitsi-default")
 
     def set_config_values_from_file(self, file, type):
         self.check_type(type)
@@ -122,11 +123,13 @@ class NitsiSettings(CommonSettings):
             raise e
 
         if "GENERAL" in config:
-            for key in ["name", "description", "copy_to", "copy_from"]:
+            for key in ["name", "description", "copy_to", "copy_from", "include_path"]:
                 if key in config["GENERAL"]:
                     # Handle the copy from setting in a special way
                     if key == "copy_from":
                         self.set_config_value(key, settings_parse_copy_from(config["GENERAL"][key], path=os.path.dirname(file)), type=type)
+                    elif key == "include_path":
+                        self.set_config_value(key, os.path.normpath(os.path.dirname(file) + "/" + config["GENERAL"][key]), type=type)
                     else:
                         self.set_config_value(key, config["GENERAL"][key], type=type)
 
