@@ -8,6 +8,9 @@ import tempfile
 
 logger = logging.getLogger("nitsi.disk")
 
+class DiskExeption(Exception):
+    def __init__(self, message):
+        self.message = message
 
 class Disk():
     def __init__(self, disk):
