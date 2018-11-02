@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import collections
 import guestfs
 import logging
 import os
@@ -19,11 +20,45 @@ class Disk():
         self.con = guestfs.GuestFS(python_return_dict=True)
         self.con.add_drive_opts(disk, format="qcow2")
 
-    def mount(self, uuid, path):
-        self.log.info("Trying to mount the partion with uuid: {} under {}".format(uuid, path))
+    def mount(self):
+        self.log.info("Trying to mount all partions of the found operating system")
+        for mountpoint, partition in self.mountpoints.items():
+            self.log.info("Trying to mount the partion {} under {}".format(partition, mountpoint))
+            self.con.mount(partition, mountpoint)
+
+    def inspect(self):
         self.con.launch()
-        part = self.con.findfs_uuid(uuid)
-        self.con.mount(part, path)
+
+        # This inspects the given Disk and
+        # returns all root filesystems of the operating systems on this disk
+        root_filesystem = self.con.inspect_os()
+
+        # If we found more the one rootfile system we throw an error
+        # because we do not support multi boot systems
+        if len(root_filesystem) > 1:
+            raise DiskExeption("Found more then one operating system on the given disk.")
+
+        # We cannot go on if we found no operating system
+        if len(root_filesystem) == 0:
+            raise DiskExeption("Found no operating system on the given disk.")
+
+        root_filesystem = root_filesystem.pop()
+
+        # Get mountpoints of all filesystems accociated with this operationg system
+        tmp = self.con.inspect_get_mountpoints(root_filesystem)
+
+        # Sort mountpoints by length to mount / before /usr
+        # We are using an ordered dict here to keep the order of the keys
+        self.mountpoints = collections.OrderedDict(sorted(tmp.items(), key=lambda t: len(t[0])))
+
+        self.log.debug(self.mountpoints)
+
+        # Print some nice information about the found operationg system
+        self.log.info("Arch of the installed operating system: {}".format(
+            self.con.inspect_get_arch(root_filesystem)))
+        self.log.info("Distribution of the installed operating system: {}".format(
+            self.con.inspect_get_distro(root_filesystem)))
+
 
     def copy_in(self, fr, to):
         self.log.info("Going to copy some files into the image.")
@@ -39,9 +74,11 @@ class Disk():
         self.con.tar_in_opts(tmp, to)
         self.log.debug(self.con.ls(to))
 
-    def umount(self, path):
-        self.log.info("Unmounting the image")
-        self.con.umount_opts(path)
+    def umount(self):
+        self.log.info("Trying to unmount all partions of the found operating system")
+        for mountpoint, partition in reversed(self.mountpoints.items()):
+            self.log.info("Trying to unmount the partion {} under {}".format(partition, mountpoint))
+            self.con.umount_opts(mountpoint)
 
     def close(self):
         self.log.info("Flush the image and closing the connection")

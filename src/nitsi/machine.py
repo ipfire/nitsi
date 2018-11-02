@@ -176,10 +176,11 @@ class Machine():
 
     def copy_in(self, fr, to):
         try:
-            self.disk.mount(self.root_uid, "/")
+            self.disk.inspect()
+            self.disk.mount()
             self.disk.copy_in(fr, to)
         except BaseException as e:
             self.log.error(e)
         finally:
-            self.disk.umount("/")
+            self.disk.umount()
             self.disk.close()
